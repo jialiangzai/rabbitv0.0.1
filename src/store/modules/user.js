@@ -13,5 +13,11 @@ export default {
       mobile: '',
       token: ''
     }
-  })
+  }),
+  mutations: {
+    // 测试修改名字
+    updateValue (state, payload) {
+      state.profile.nickname = payload
+    }
+  }
 }
