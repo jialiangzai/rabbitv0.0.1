@@ -42,3 +42,30 @@ instance.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+// 之前的话就是直接导出了instance
+// 现在请求instance二次封装
+/**
+ * 非必须的
+ * 基于instance的axios实例结合jquery和js原生(js动态属性名)
+ * 对象.属性名 对象[属性名] 名字都是字符串
+ */
+/**
+ *
+ * @param {*} url 地址
+ * @param {*} method 方式
+ * @param {*} data 参数
+ */
+const request = (url, method, data) => {
+  // instance()实际就是axios的一个实例
+  return instance({
+    // 前两项的键/值是字符串，简写了
+    url,
+    method,
+    // data参数对象{}注意比较特殊 get是params属性名 post应该是data属性名
+    // 因为传入的是大写的这里判断并转小写===>js区分大小写
+    [method.toLowerCase() === 'get' ? 'params' : 'data']: data
+  })
+}
+// 默认导出
+// 调用request()实际返回promise对象
+export default request
