@@ -1,4 +1,8 @@
 import { createStore } from 'vuex'
+// user模块
+import user from './modules/user'
+// cart模块
+import cart from './modules/cart'
 // 创建store实例
 export default createStore({
   // 定义变量
@@ -12,5 +16,7 @@ export default createStore({
   },
   // 模块化
   modules: {
+    user,
+    cart
   }
 })
