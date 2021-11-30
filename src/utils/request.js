@@ -62,10 +62,11 @@ const request = (url, method, data) => {
     url,
     method,
     // data参数对象{}注意比较特殊 get是params属性名 post应该是data属性名
+    // 注意此时进行了二次封装调用传参就是不能省略get方式了还是一种优化
     // 因为传入的是大写的这里判断并转小写===>js区分大小写
     [method.toLowerCase() === 'get' ? 'params' : 'data']: data
   })
 }
 // 默认导出
-// 调用request()实际返回promise对象
+// 其他组件调用request()实际返回promise对象
 export default request
