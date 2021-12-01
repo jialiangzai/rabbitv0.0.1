@@ -1,12 +1,12 @@
 <template>
-  <ul class="app-header-nav">
+  <ul class="app-header-nav" v-cloak>
     <li class="home"><RouterLink to="/">首页</RouterLink></li>
     <!-- 延时用骨架屏 -->
-    <li v-for="v in catelist" :key="v.id" v-cloak>
+    <li v-for="v in catelist" :key="v.id">
       <!-- 一级菜单 -->
       <a href="#">{{ v.name }}</a>
       <!-- hover 显示 start -->
-      <template class="layer">
+      <div class="layer">
         <ul>
           <!-- 二级菜单 -->
           <li v-for="chd in v.children" :key="chd.id">
@@ -16,7 +16,7 @@
             </a>
           </li>
         </ul>
-      </template>
+      </div>
       <!-- hover 显示 end -->
     </li>
     <!-- <li><a href="#">餐厨</a></li>
@@ -31,19 +31,49 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { useStore } from 'vuex'
+import { onMounted, computed } from 'vue'
 export default {
   name: 'AppHeaderNav',
-  created () {
-    this.getCateList()
-  },
-  computed: {
-    ...mapState('category', ['catelist'])
-  },
-  methods: {
-    getCateList () {
-      this.$store.dispatch('category/getCategory')
-    }
+  //   1. state中定义我们需要管理的数据  响应式的  由业务决定当前到底应该定义成什么类型
+  // 2. mutation中定义修改数据的方法  同步函数  只需要完成实参注入对于state中的数据赋值即可
+  // 3. 如果有异步 我们就封装一个action函数 1. 发送请求  2.调用mutation函数(支持异步调用的mutation)
+  // 4. 在业务组件里找到一个合适的时机调用action函数
+
+  // 测试:
+  //     1. dev- tools  检测当前的action函数和mutation是否调用成功  传递的参数是否符合预期
+  // 2. Logger插件  检测log区域查看当前的action函数和mutation是否调用成功  传递的参数是否符合预期
+  // vue2开始
+  // created () {
+  //   this.getCateList()
+  // },
+  // map目前还是以vue2的计算属性为主
+  // computed: {
+  //   ...mapState('category', ['catelist'])
+  // },
+  // methods: {
+  //   getCateList () {
+  //     this.$store.dispatch('category/getCategory')
+  //   }
+  // },
+  //  vue2结束
+
+  // vue3实现原理
+  setup () {
+    // 因为没有this所以用useStore钩子(vuex内置的钩子)拿到store实例
+    // store实例===this.$store
+    // 定义的useStore钩子函数不要写到内部函数中(底层原理)，放在setup的第一层
+    const store = useStore()
+    // 组件挂载后调用store的dispatch方法
+    onMounted(() => {
+      // console.log(store)
+      store.dispatch('category/getCategory')
+    })
+    // 使用vue3的计算属性不依赖mapState
+    const catelist = computed(() => {
+      return store.state.category.catelist
+    })
+    return { catelist }
   }
 }
 </script>
