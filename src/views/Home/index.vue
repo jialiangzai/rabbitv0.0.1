@@ -1,9 +1,19 @@
 <template>
-  <div class="box">首页</div>
+  <div class="container">
+    <!-- 左侧分类列表 -->
+    <HomeCategory />
+    <!-- 右侧轮播图 -->
+    <HomeBanner />
+  </div>
 </template>
 
 <script>
+import HomeCategory from './components/home-category'
+import HomeBanner from './components/home-banner'
 export default {
+  components: {
+    HomeCategory, HomeBanner
+  },
   setup () {
     return {}
   }
@@ -13,7 +23,7 @@ export default {
 <style lang="less" scoped>
 // 手动引入less变量样式
 // @import "~@/styles/variables.less";
-.box {
-  color: @xtxColor;
-}
+// .box {
+//   color: @xtxColor;
+// }
 </style>
