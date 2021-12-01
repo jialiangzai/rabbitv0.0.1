@@ -1,5 +1,6 @@
 <template>
-  <div class="app-header-sticky" :class="{ show: isShow }">
+  <!-- <div class="app-header-sticky" :class="{ show: isShow }"> -->
+  <div class="app-header-sticky" :class="{ show: y > 100 }">
     <div class="container">
       <RouterLink class="logo" to="/" />
       <HeaderNav />
@@ -13,7 +14,9 @@
 
 <script>
 import HeaderNav from './header-nav'
-import { ref, onMounted } from 'vue'
+// import { ref, onMounted } from 'vue'
+// 依赖vueuse插件的useWindowScroll钩子实现
+import { useWindowScroll } from '@vueuse/core'
 export default {
   name: 'AppHeaderSticky',
   components: { HeaderNav },
@@ -37,22 +40,24 @@ export default {
   setup () {
     // 定义一个变量存储是否可见吸顶组件
     // 默认不显示
-    const isShow = ref(false)
+    // const isShow = ref(false)
     // 实现滚动事件显示吸顶组件  -----
     // 实际就是window的滚动事件拿到滚动高度当满足条件是就去控制
-    onMounted(() => {
-      window.onscroll = () => {
-        // 滚动高度
-        const hights = document.documentElement.scrollTop
-        // console.log('页面的滚动高度', hights)
-        if (hights > 100) {
-          isShow.value = true
-        } else {
-          isShow.value = false
-        }
-      }
-    })
-    return { isShow }
+    // onMounted(() => {
+    // window.onscroll = () => {
+    //   // 滚动高度
+    //   const hights = document.documentElement.scrollTop
+    //   // console.log('页面的滚动高度', hights)
+    //   if (hights > 100) {
+    //     isShow.value = true
+    //   } else {
+    //     isShow.value = false
+    //   }
+    // }
+    // })
+    const { y } = useWindowScroll()
+    // return { isShow }
+    return { y }
   }
 }
 </script>
