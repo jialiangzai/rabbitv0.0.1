@@ -6,6 +6,8 @@ import user from './modules/user'
 import cart from './modules/cart'
 // 使用第三方插件做持久化省去自己写方法
 import createPersistedstate from 'vuex-persistedstate'
+// 引入商品分类
+import category from './modules/category'
 // 创建store实例
 export default createStore({
   // 定义变量
@@ -20,7 +22,8 @@ export default createStore({
   // 模块化
   modules: {
     user,
-    cart
+    cart,
+    category
   },
   // vuex可以接受插件穿装备
   // 直接调用不传参数，键为vuex，传到localstorage中vue3的tools有问题直接去application中看

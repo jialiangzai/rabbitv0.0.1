@@ -8,15 +8,17 @@
     <!-- 二级路由出口 -->
     <router-view></router-view>
   </main>
-  <footer>底部</footer>
+  <!-- <footer>底部</footer> -->
+  <XtxFooter />
 </template>
 
 <script>
 import XtxTopNav from './components/topnav.vue'
 import XtxHeader from './components/header.vue'
+import XtxFooter from './components/footer.vue'
 export default {
   name: 'xtx-layout',
-  components: { XtxTopNav, XtxHeader }
+  components: { XtxTopNav, XtxHeader, XtxFooter }
 }
 </script>
 
