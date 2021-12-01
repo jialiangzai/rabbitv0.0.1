@@ -1,14 +1,17 @@
 <template>
-  <div>布局结构</div>
+  <nav>顶部通栏</nav>
+  <header>头部</header>
+  <main>
+    <!-- 二级路由出口 -->
+    <router-view></router-view>
+  </main>
+  <footer>底部</footer>
 </template>
 
 <script>
 export default {
-  setup () {
-    return {}
-  }
+  name: 'xtx-layout'
 }
 </script>
 
-<style lang="less" scoped>
-</style>
+<style scoped lang='less'></style>
