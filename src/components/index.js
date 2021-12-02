@@ -4,8 +4,10 @@
 import Skeleton from './Skeleton'
 // 轮播图
 import Slider from './Slider'
+// 更多
+import XtxMore from './More'
 // 放置到数组中循环遍历
-const cps = [Skeleton, Slider]
+const cps = [Skeleton, Slider, XtxMore]
 export default {
   // vue2参数是构造函数，vue3是vue实例(app)
   install (app) {
