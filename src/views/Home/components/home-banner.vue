@@ -1,10 +1,31 @@
 <template>
-  <div class="home-banner">banner</div>
+  <div class="home-banner">
+    <XtxSlider :data="list" autoPlay />
+  </div>
 </template>
 
 <script>
+import { findBanner } from '@/api/home'
+import { ref, onMounted } from 'vue'
 export default {
-  name: 'HomeBanner'
+  name: 'HomeBanner',
+  /**
+   * 1.定义轮播图列表变量
+   * 2.定义获取轮播图方法
+   * 3.在组件挂载发送求
+   */
+  setup () {
+    const list = ref([])
+    const getList = async () => {
+      const { result } = await findBanner()
+      console.log('轮播图数据', result)
+      list.value = result
+    }
+    onMounted(() => {
+      getList()
+    })
+    return { list }
+  }
 }
 </script>
 

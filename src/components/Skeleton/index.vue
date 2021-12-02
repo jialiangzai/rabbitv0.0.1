@@ -10,7 +10,7 @@
 </template>
 <script>
 export default {
-  name: 'XtxSkeleton',
+  name: 'Skeleton',
   props: {
     width: {
       type: Number,

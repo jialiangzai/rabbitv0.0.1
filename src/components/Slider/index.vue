@@ -36,6 +36,9 @@
  *   2. 记录一下当前点击的是哪一项
  *   3. 需要根据记录下来的下标值 去配合:class 控制fade这个类名是否应该显示
  */
+/**
+ * 关于普通函数发请求可以写在setup中而且速度比挂载快，但是如果使用其他钩子拿实例useStore在点击事件是拿不到实例的是有问题的，undefined，类似react中hooks，所以如果像是vuex的store和router实例尽量写在setup第一层中，不要嵌套函数(点击事件，异步)===》普通的函数是没问题的
+ */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 export default {
   name: 'XtxSlider',
