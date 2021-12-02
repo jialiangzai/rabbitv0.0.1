@@ -16,3 +16,11 @@ export const findHeadCategory = () => {
 export const findBanner = () => {
   return request('home/banner', 'get')
 }
+/**
+ * @description: 获取新鲜好物
+ * @param {*}
+ * @return {*}
+ */
+export const findNew = () => {
+  return request('home/new', 'get')
+}
