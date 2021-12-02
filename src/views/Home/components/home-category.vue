@@ -1,6 +1,7 @@
 <template>
   <!-- 骨架屏 -->
-  <Skeleton />
+  <Skeleton :width="200" :height="100" bg="red" />
+  <Skeleton :width="100" :height="100" bg="blue" />
   <div class="home-category">
     <ul class="menu">
       <!-- 一级 -->

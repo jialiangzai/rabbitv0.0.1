@@ -1,13 +1,30 @@
 <template>
-  <div class="xtx-skeleton shan" :style="{ width: '60px', height: '30px' }">
+  <div
+    class="xtx-skeleton shan"
+    :style="{ width: width + 'px', height: height + 'px' }"
+  >
     <!-- 1 盒子-->
-    <div class="block" :style="{ backgroundColor: '#efefef' }"></div>
+    <div class="block" :style="{ backgroundColor: bg }"></div>
     <!-- 2 闪效果 xtx-skeleton 伪元素 --->
   </div>
 </template>
 <script>
 export default {
-  name: 'XtxSkeleton'
+  name: 'XtxSkeleton',
+  props: {
+    width: {
+      type: Number,
+      default: 0
+    },
+    height: {
+      type: Number,
+      default: 0
+    },
+    bg: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>
 <style scoped lang="less">
