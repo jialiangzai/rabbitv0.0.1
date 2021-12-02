@@ -1,4 +1,6 @@
 <template>
+  <!-- 骨架屏 -->
+  <Skeleton />
   <div class="home-category">
     <ul class="menu">
       <!-- 一级 -->
