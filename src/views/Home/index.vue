@@ -11,7 +11,9 @@
     <!-- <h2>我是内容</h2> -->
     <!-- </HomePanel> -->
     <!-- 商品电梯导航 -->
-    <HomeNew> </HomeNew>
+    <HomeNew />
+    <!-- 人气推荐 -->
+    <HomeHot />
   </div>
 </template>
 
@@ -20,9 +22,10 @@ import HomeCategory from './components/home-category'
 import HomeBanner from './components/home-banner'
 // import HomePanel from './components/home-panel.vue'
 import HomeNew from './components/home-new.vue'
+import HomeHot from './components/home-hot.vue'
 export default {
   components: {
-    HomeCategory, HomeBanner, HomeNew
+    HomeCategory, HomeBanner, HomeNew, HomeHot
   },
   setup () {
     return {}
