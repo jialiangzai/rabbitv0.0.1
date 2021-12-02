@@ -1,5 +1,5 @@
 <template>
-  <HomePanel title="新鲜好物" sub-title="新鲜出炉 品质靠谱">
+  <HomePanel title="新鲜好物" sub-title="新鲜出炉 品质靠谱" ref="target">
     <template #right>
       <xtx-more></xtx-more>
     </template>
@@ -20,7 +20,10 @@
 <script>
 import HomePanel from './home-panel'
 import { findNew } from '@/api/home'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
+// hook钩子
+import { useObserver } from '@/hooks'
+
 export default {
   components: {
     HomePanel
@@ -35,11 +38,16 @@ export default {
       list.value = res.result
     }
     // 3. onMounted中调用getList
-    onMounted(() => {
-      getList()
-    })
+    // onMounted(() => {
+    //   getList()
+    // })
+    const { target, targetIsVisible } = useObserver(getList)
+    // console.log('1', target)
+
     return {
-      list
+      list,
+      target,
+      targetIsVisible
     }
   }
 }
