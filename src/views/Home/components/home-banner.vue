@@ -7,6 +7,19 @@
 <script>
 import { findBanner } from '@/api/home'
 import { ref, onMounted } from 'vue'
+// 逻辑抽离--->缓解setup变种写法
+const useXtxSlider = () => {
+  const list = ref([])
+  const getList = async () => {
+    const { result } = await findBanner()
+    console.log('轮播图数据', result)
+    list.value = result
+  }
+  onMounted(() => {
+    getList()
+  })
+  return { list }
+}
 export default {
   name: 'HomeBanner',
   /**
@@ -15,15 +28,16 @@ export default {
    * 3.在组件挂载发送求
    */
   setup () {
-    const list = ref([])
-    const getList = async () => {
-      const { result } = await findBanner()
-      console.log('轮播图数据', result)
-      list.value = result
-    }
-    onMounted(() => {
-      getList()
-    })
+    // const list = ref([])
+    // const getList = async () => {
+    //   const { result } = await findBanner()
+    //   console.log('轮播图数据', result)
+    //   list.value = result
+    // }
+    // onMounted(() => {
+    //   getList()
+    // })
+    const list = useXtxSlider()
     return { list }
   }
 }
