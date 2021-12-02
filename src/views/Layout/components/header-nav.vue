@@ -1,24 +1,37 @@
 <template>
   <ul class="app-header-nav" v-cloak>
-    <li class="home"><RouterLink to="/">首页</RouterLink></li>
-    <!-- 延时用骨架屏 -->
-    <li v-for="v in catelist" :key="v.id">
-      <!-- 一级菜单 -->
-      <a href="#">{{ v.name }}</a>
-      <!-- hover 显示 start -->
-      <div class="layer">
-        <ul>
-          <!-- 二级菜单 -->
-          <li v-for="chd in v.children" :key="chd.id">
-            <a href="#">
-              <img :src="chd.picture" alt="" />
-              <p>{{ chd.name }}</p>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <!-- hover 显示 end -->
+    <li class="home">
+      <RouterLink to="/">首页</RouterLink>
     </li>
+    <!-- 延时用骨架屏 -->
+    <!-- 页面有数据的时候 -->
+    <template v-if="catelist.length > 0">
+      <li v-for="v in catelist" :key="v.id">
+        <!-- 一级菜单 -->
+        <a href="#">{{ v.name }}</a>
+        <!-- hover 显示弹层 start -->
+        <div class="layer">
+          <ul>
+            <!-- 二级菜单 -->
+            <li v-for="chd in v.children" :key="chd.id">
+              <a href="#">
+                <img :src="chd.picture" alt="" />
+                <p>{{ chd.name }}</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <!-- hover 显示 end -->
+      </li>
+    </template>
+    <!-- 页面无数据或请求未返回数据时候 -->
+    <template v-else>
+      <!-- 注意加了ul是有样式重叠所以没写ul -->
+      <li v-for="navsNum in 9" :key="navsNum">
+        <Skeleton :width="26" :height="26" bg="#ccc" />
+      </li>
+    </template>
+
     <!-- <li><a href="#">餐厨</a></li>
     <li><a href="#">艺术</a></li>
     <li><a href="#">电器</a></li>
