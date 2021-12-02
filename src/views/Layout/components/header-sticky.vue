@@ -3,6 +3,7 @@
   <div class="app-header-sticky" :class="{ show: y > 100 }">
     <div class="container">
       <RouterLink class="logo" to="/" />
+      <!-- 复用了header-nav组件会发两次请求 -->
       <HeaderNav />
       <div class="right">
         <RouterLink to="/">品牌</RouterLink>

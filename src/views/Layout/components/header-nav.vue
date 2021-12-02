@@ -45,7 +45,7 @@
 
 <script>
 import { useStore } from 'vuex'
-import { onMounted, computed } from 'vue'
+import { computed } from 'vue'
 export default {
   name: 'AppHeaderNav',
   //   1. state中定义我们需要管理的数据  响应式的  由业务决定当前到底应该定义成什么类型
@@ -78,10 +78,11 @@ export default {
     // 定义的useStore钩子函数不要写到内部函数中(底层原理)，放在setup的第一层
     const store = useStore()
     // 组件挂载后调用store的dispatch方法
-    onMounted(() => {
-      // console.log(store)
-      store.dispatch('category/getCategory')
-    })
+    // 解决会发两次请求问题不让它在组件中发请求
+    // onMounted(() => {
+    //   // console.log(store)
+    //   store.dispatch('category/getCategory')
+    // })
     // 使用vue3的计算属性不依赖mapState
     const catelist = computed(() => {
       return store.state.category.catelist
