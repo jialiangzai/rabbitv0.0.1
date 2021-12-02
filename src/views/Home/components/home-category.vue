@@ -1,42 +1,69 @@
 <template>
-  <!-- 骨架屏 -->
-  <Skeleton :width="200" :height="100" bg="red" />
-  <Skeleton :width="100" :height="100" bg="blue" />
   <div class="home-category">
-    <ul class="menu">
-      <!-- 一级 -->
-      <li
-        v-for="item in leftNavs"
-        :key="item.id"
-        @mouseenter="currCateId = item.id"
-      >
-        <RouterLink to="/">{{ item.name }}</RouterLink>
-        <!-- 二级 -->
-        <template v-if="item.children">
-          <RouterLink v-for="sub in item.children" :key="sub.id" to="/">
-            {{ sub.name }}
-          </RouterLink>
-        </template>
-      </li>
-    </ul>
-    <!-- 鼠标激活弹层显示 -->
-    <!-- 弹层 -->
-    <div class="layer">
-      <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
-      <!-- 做判断 -->
-      <ul v-if="currGoods && currGoods.goods">
-        <li v-for="i in currGoods.goods" :key="i.id">
-          <RouterLink to="/">
-            <img :src="i.picture" :alt="i.name" />
-            <div class="info">
-              <p class="name ellipsis-2">{{ i.name }}</p>
-              <p class="desc ellipsis">{{ i.desc }}</p>
-              <p class="price"><i>¥</i>{{ i.price }}</p>
-            </div>
-          </RouterLink>
+    <!-- 1.有数据才会显示 -->
+    <template v-if="leftNavs.length > 0">
+      <ul class="menu">
+        <!-- 一级 -->
+        <li
+          v-for="item in leftNavs"
+          :key="item.id"
+          @mouseenter="currCateId = item.id"
+        >
+          <RouterLink to="/">{{ item.name }}</RouterLink>
+          <!-- 二级 -->
+          <template v-if="item.children">
+            <RouterLink v-for="sub in item.children" :key="sub.id" to="/">
+              {{ sub.name }}
+            </RouterLink>
+          </template>
         </li>
       </ul>
-    </div>
+      <!-- 鼠标激活弹层显示 -->
+      <!-- 弹层 -->
+      <div class="layer">
+        <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
+        <!-- 做判断 -->
+        <ul v-if="currGoods && currGoods.goods">
+          <li v-for="i in currGoods.goods" :key="i.id">
+            <RouterLink to="/">
+              <img :src="i.picture" :alt="i.name" />
+              <div class="info">
+                <p class="name ellipsis-2">{{ i.name }}</p>
+                <p class="desc ellipsis">{{ i.desc }}</p>
+                <p class="price"><i>¥</i>{{ i.price }}</p>
+              </div>
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+    </template>
+    <!-- 无数据时显示骨架屏缓解用户焦虑-----》注意v-else必须写 -->
+    <template v-else>
+      <ul class="menu">
+        <!-- 放9个骨架屏站位就行了 -->
+        <li v-for="num in 9" :key="num">
+          <!-- 骨架屏 -->
+          <Skeleton
+            style="margin-right: 10px"
+            :width="40"
+            :height="20"
+            bg="rgba(255, 255, 255, 0.2)"
+          />
+          <Skeleton
+            style="margin-right: 10px"
+            :width="50"
+            :height="20"
+            bg="rgba(255, 255, 255, 0.2)"
+          />
+          <Skeleton
+            style="margin-right: 10px"
+            :width="50"
+            :height="20"
+            bg="rgba(255, 255, 255, 0.2)"
+          />
+        </li>
+      </ul>
+    </template>
   </div>
 </template>
 
