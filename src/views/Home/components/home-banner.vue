@@ -37,7 +37,7 @@ export default {
     // onMounted(() => {
     //   getList()
     // })
-    const list = useXtxSlider()
+    const { list } = useXtxSlider()
     return { list }
   }
 }
