@@ -17,7 +17,9 @@
       <div class="goods-info">
         <!-- 新增结构 -->
         <!-- 图片预览区 -->
-        <div class="media"></div>
+        <div class="media">
+          <GoodsImage :mainPictures="listDetails.mainPictures" />
+        </div>
         <!-- 商品信息区 -->
         <div class="spec"></div>
       </div>
@@ -38,8 +40,13 @@
 import { ref } from 'vue'
 import { findGoods } from '@/api/goods'
 import { useRoute } from 'vue-router'
+// 图片预览
+import GoodsImage from './components/goods-image.vue'
 export default {
   name: 'XtxGoodsPage',
+  components: {
+    GoodsImage
+  },
   setup () {
     const listDetails = ref({})
     // 路由参数对象是一个reactive对象响应式的
