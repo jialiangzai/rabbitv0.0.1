@@ -6,8 +6,11 @@ import Skeleton from './Skeleton'
 import Slider from './Slider'
 // 更多
 import XtxMore from './More'
+// 面包屑组件
+import Bread from './Bread'
+import BreadItem from './Bread/item.vue'
 // 放置到数组中循环遍历
-const cps = [Skeleton, Slider, XtxMore]
+const cps = [Skeleton, Slider, XtxMore, Bread, BreadItem]
 export default {
   // vue2参数是构造函数，vue3是vue实例(app)
   install (app) {

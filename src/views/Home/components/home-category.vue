@@ -25,7 +25,7 @@
         <!-- 做判断 -->
         <ul v-if="currGoods && currGoods.goods">
           <li v-for="i in currGoods.goods" :key="i.id">
-            <RouterLink to="/">
+            <RouterLink :to="`/goods/${i.id}`">
               <img :src="i.picture" :alt="i.name" />
               <div class="info">
                 <p class="name ellipsis-2">{{ i.name }}</p>

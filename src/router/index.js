@@ -4,6 +4,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const Layout = () => import('@/views/Layout')
 // 首页
 const Home = () => import('@/views/Home')
+// 详情页
+const Detail = () => import('@/views/Goods')
 // 路由规则
 const routes = [
   {
@@ -12,7 +14,13 @@ const routes = [
     children: [{
       path: '/',
       component: Home
-    }]
+    },
+    // 商品详情
+    {
+      path: '/goods/:id',
+      component: Detail
+    }
+    ]
   }
 ]
 
