@@ -25,6 +25,9 @@ const routes = [
 ]
 
 const router = createRouter({
+  // 每次路由跳转重置滚动条位置
+  // vue2中使用scrollbehavior返回值{x:0,y:0} vue3中返回值是{ left: 0, top: 0 }
+  scrollBehavior: () => ({ left: 0, top: 0 }),
   history: createWebHashHistory(),
   routes
 })
