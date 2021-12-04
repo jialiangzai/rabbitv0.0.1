@@ -10,7 +10,10 @@
     <div class="middle" ref="leftImg">
       <img :src="mainPictures[currentIndex]" alt="" />
       <!-- 蒙层容器 -->
-      <div class="layer"></div>
+      <div
+        class="layer"
+        :style="{ left: `${pos.left}px`, top: `${pos.top}px` }"
+      ></div>
     </div>
     <!--右侧 小图列表 -->
     <ul class="small">
@@ -25,7 +28,7 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useMouseInElement } from '@vueuse/core'
 export default {
   name: 'GoodsImage',
@@ -42,10 +45,44 @@ export default {
     // elementX 鼠标基于容器左上角X轴偏移
     // elementY 鼠标基于容器左上角Y轴偏移
     // isOutside 鼠标是否在模板容器外
-    // 三个参数都是ref对象
+    // 返回的三个参数都是ref对象
+    // useMouseInElement函数调用的参数-------规定鼠标移动范围(Dom元素)
     const { elementX, elementY, isOutside } = useMouseInElement(leftImg)
-
-    return { currentIndex, leftImg, elementX, elementY, isOutside }
+    /**
+   * 1. 蒙层的移动
+   *    获取元素内鼠标的移动坐标
+   *    监听元素内鼠标移动的坐标变化===》控制蒙层的移动====》计算top/left   使用watch
+   *    注意使用蒙层移动最终以它的中心点为基准位置而不是鼠标在蒙层左上角
+   * 结论：
+   * 蒙层可以移动范围 100-300 存在超出
+   * 蒙层位置 left | top= elementX, elementY - 蒙层的width| height 的1/2
+   * 蒙层的可移动距离 0 -200限制超出
+   * left = 滑块中心点距离左侧距离 - 蒙层滑块宽度一半
+   * top = 滑块中心点距离顶部距离 - 蒙层滑块宽度一半
+   */
+    // 定义蒙层的位置
+    const pos = ref({ left: 0, top: 0 })
+    watch([elementX, elementY], () => {
+      // x轴
+      if (elementX.value < 100) {
+        pos.value.left = 0
+      } else if (elementX.value > 300) {
+        pos.value.left = 200
+      } else {
+        // 减去蒙层的一半100
+        pos.value.left = elementX.value - 100
+      }
+      // y轴
+      if (elementY.value < 100) {
+        pos.value.top = 0
+      } else if (elementY.value > 300) {
+        pos.value.top = 200
+      } else {
+        // 减去蒙层的一半100
+        pos.value.top = elementY.value - 100
+      }
+    })
+    return { currentIndex, leftImg, elementX, elementY, isOutside, pos }
   }
 }
 </script>
