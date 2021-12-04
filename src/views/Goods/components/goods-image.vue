@@ -1,16 +1,23 @@
 <template>
-  <p>x{{ elementX }}, y{{ elementY }}, 是否在盒子外面{{ isOutside }}</p>
+  <!-- <p>x{{ elementX }}, y{{ elementY }}, 是否在盒子外面{{ isOutside }}</p> -->
   <div class="goods-image">
     <!-- 放大镜的盒子 -->
     <div
+      v-show="!isOutside"
       class="large"
-      :style="[{ backgroundImage: `url(${mainPictures[currentIndex]})` }]"
+      :style="[
+        {
+          backgroundImage: `url(${mainPictures[currentIndex]})`,
+          backgroundPosition: `${bg.x}px  ${bg.y}px`,
+        },
+      ]"
     ></div>
     <!-- 左侧大图 -->
     <div class="middle" ref="leftImg">
       <img :src="mainPictures[currentIndex]" alt="" />
       <!-- 蒙层容器 -->
       <div
+        v-show="!isOutside"
         class="layer"
         :style="{ left: `${pos.left}px`, top: `${pos.top}px` }"
       ></div>
@@ -62,6 +69,8 @@ export default {
    */
     // 定义蒙层的位置
     const pos = ref({ left: 0, top: 0 })
+    // 定义放大镜的位置是小盒子图片的两倍像素
+    const bg = ref({ x: 0, y: 0 })
     watch([elementX, elementY], () => {
       // x轴
       if (elementX.value < 100) {
@@ -81,8 +90,13 @@ export default {
         // 减去蒙层的一半100
         pos.value.top = elementY.value - 100
       }
+      // 1. 大图和小图比例为2: 1
+      // 2. 所以计算公式应该为小图的定位距离乘以2，大图背景的移动始终是跟着滑块的移动走的
+      // 因为浏览器默认的坐标系是左上角 图片默认位置也是左上角所以为负数
+      bg.value.x = -pos.value.left * 2
+      bg.value.y = -pos.value.top * 2
     })
-    return { currentIndex, leftImg, elementX, elementY, isOutside, pos }
+    return { currentIndex, leftImg, elementX, elementY, isOutside, pos, bg }
   }
 }
 </script>
