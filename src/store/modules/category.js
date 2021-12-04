@@ -18,7 +18,7 @@ export default {
       // 1.调用接口方法
       // 2.成功获取到数据之后触发setList mutation函数
       const res = await findHeadCategory()
-      console.log(res.result)
+      // console.log(res.result)
       ctx.commit('setCategory', res.result)
     }
   }
