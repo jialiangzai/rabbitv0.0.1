@@ -31,7 +31,9 @@ export function useObserver (apiFn) {
         // 停止监听元素
         stop()
       }
-    }
+    },
+    // 进入当前元素可视区域的比例是多少才执行回调 0-1 值越大 代表需要进入的面积越大
+    { threshold: 0 }
   )
   // 注意一定要返回target否则拿不到ref对象且模板无法使用
   return { target, targetIsVisible }

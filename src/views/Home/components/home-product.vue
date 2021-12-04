@@ -1,5 +1,5 @@
 <template>
-  <div class="home-product">
+  <div class="home-product" ref="target">
     <!-- 面板组件 -->
     <HomePanel :title="i.name" v-for="i in listNews" :key="i.id">
       <!-- 头部信息 -->
@@ -36,6 +36,7 @@ import HomePanel from './home-panel'
 import HomeGoods from './home-goods'
 import { findGoods } from '@/api/home'
 import { ref } from 'vue'
+import { useObserver } from '@/hooks/index'
 export default {
   name: 'HomeProduct',
   components: { HomePanel, HomeGoods },
@@ -46,8 +47,9 @@ export default {
       console.log(result, 123)
       listNews.value = result
     }
-    getList()
-    return { getList, listNews }
+    // getList()无法控制
+    const { target } = useObserver(getList)
+    return { getList, listNews, target }
   }
 }
 </script>
