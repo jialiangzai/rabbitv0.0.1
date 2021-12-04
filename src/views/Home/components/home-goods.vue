@@ -2,7 +2,8 @@
   <div class="goods-item">
     <!-- 单个商品组件 -->
     <RouterLink to="/" class="image">
-      <img :src="goods.picture" alt="" />
+      <!-- <img :src="goods.picture" alt="" /> 无脑渲染性能差 -->
+      <img v-imglazy="goods.picture" alt="" />
     </RouterLink>
     <p class="name ellipsis-2">{{ goods.name }}</p>
     <p class="desc">{{ goods.desc }}</p>

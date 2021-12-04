@@ -44,7 +44,7 @@ export default {
     const listNews = ref([])
     const getList = async () => {
       const { result } = await findGoods()
-      console.log(result, 123)
+      // console.log(result, 123)
       listNews.value = result
     }
     // getList()无法控制

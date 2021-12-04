@@ -12,7 +12,7 @@ const useXtxSlider = () => {
   const list = ref([])
   const getList = async () => {
     const { result } = await findBanner()
-    console.log('轮播图数据', result)
+    // console.log('轮播图数据', result)
     list.value = result
   }
   onMounted(() => {
