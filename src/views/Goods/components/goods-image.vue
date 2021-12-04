@@ -2,17 +2,22 @@
   <div class="goods-image">
     <!-- 左侧大图 -->
     <div class="middle">
-      <img :src="mainPictures[0]" alt="" />
+      <img :src="mainPictures[currentIndex]" alt="" />
     </div>
     <!--右侧 小图列表 -->
     <ul class="small">
-      <li v-for="(img, i) in mainPictures" :key="i">
+      <li
+        v-for="(img, i) in mainPictures"
+        :key="i"
+        @mouseenter="currentIndex = i"
+      >
         <img :src="img" alt="" />
       </li>
     </ul>
   </div>
 </template>
 <script>
+import { ref } from 'vue'
 export default {
   name: 'GoodsImage',
   props: {
@@ -20,6 +25,10 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  setup () {
+    const currentIndex = ref(0)
+    return { currentIndex }
   }
 }
 </script>
