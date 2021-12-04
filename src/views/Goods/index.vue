@@ -19,9 +19,12 @@
         <!-- 图片预览区 -->
         <div class="media">
           <GoodsImage :mainPictures="listDetails.mainPictures" />
+          <GoodsSales />
         </div>
         <!-- 商品信息区 -->
-        <div class="spec"></div>
+        <div class="spec">
+          <GoodsName />
+        </div>
       </div>
       <!-- 商品详情 -->
       <div class="goods-footer">
@@ -37,18 +40,27 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+// 依赖注入
+import { ref, provide } from 'vue'
 import { findGoods } from '@/api/goods'
 import { useRoute } from 'vue-router'
 // 图片预览
 import GoodsImage from './components/goods-image.vue'
+// 左侧底部信息
+import GoodsSales from './components/goods-sales.vue'
+import GoodsName from './components/goods-name.vue'
 export default {
   name: 'XtxGoodsPage',
   components: {
-    GoodsImage
+    GoodsImage,
+    GoodsSales,
+    GoodsName
   },
   setup () {
     const listDetails = ref({})
+    // 依赖数据谁用谁注入
+    // 只能写第一层和setup的底层钩子函数执行有关-----可以获取到   listDetails是响应式的
+    provide('goods', listDetails)
     // 路由参数对象是一个reactive对象响应式的
     const route = useRoute()
     const getListDetail = async () => {
