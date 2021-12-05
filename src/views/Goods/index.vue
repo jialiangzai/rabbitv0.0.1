@@ -27,8 +27,9 @@
           <!-- sku组件 -->
 
           <!-- 产出当前选择的商品规格信息，如果是完整的sku，产出完整的对象信息，如果不完整，则产出空对象 -->
-
           <GoodsSku :goods="listDetails" @change="selSku" />
+          <!-- 数量组件 -->
+          <XtxNumbox :max="listDetails.inventory" :min="1" />
         </div>
       </div>
       <!-- 商品详情 -->

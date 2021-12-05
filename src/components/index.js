@@ -13,8 +13,10 @@ import BreadItem from './Bread/item.vue'
 import City from './City'
 // sku
 import Sku from './Sku'
+// 数量组件+ -
+import Numbox from './Numbox'
 // 放置到数组中循环遍历
-const cps = [Skeleton, Slider, XtxMore, Bread, BreadItem, City, Sku]
+const cps = [Skeleton, Slider, XtxMore, Bread, BreadItem, City, Sku, Numbox]
 export default {
   // vue2参数是构造函数，vue3是vue实例(app)
   install (app) {
