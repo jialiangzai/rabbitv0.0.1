@@ -11,8 +11,10 @@ import Bread from './Bread'
 import BreadItem from './Bread/item.vue'
 // 商品信息右侧级联城市选择
 import City from './City'
+// sku
+import Sku from './Sku'
 // 放置到数组中循环遍历
-const cps = [Skeleton, Slider, XtxMore, Bread, BreadItem, City]
+const cps = [Skeleton, Slider, XtxMore, Bread, BreadItem, City, Sku]
 export default {
   // vue2参数是构造函数，vue3是vue实例(app)
   install (app) {

@@ -24,6 +24,11 @@
         <!-- 商品信息区 -->
         <div class="spec">
           <GoodsName />
+          <!-- sku组件 -->
+
+          <!-- 产出当前选择的商品规格信息，如果是完整的sku，产出完整的对象信息，如果不完整，则产出空对象 -->
+
+          <GoodsSku :goods="listDetails" @change="selSku" />
         </div>
       </div>
       <!-- 商品详情 -->
@@ -69,7 +74,18 @@ export default {
       listDetails.value = result
     }
     getListDetail()
-    return { listDetails, getListDetail }
+    // sku选择事件
+    const selSku = (sku) => {
+      console.log('选中的sku信息', sku)
+      // 判断是否有效 =====id
+      if (sku.skuId) {
+        // 修改商品的现价原价库存信息
+        listDetails.value.price = sku.price
+        listDetails.value.oldPrice = sku.oldPrice
+        listDetails.value.inventory = sku.inventory
+      }
+    }
+    return { listDetails, getListDetail, selSku }
   }
 }
 </script>
