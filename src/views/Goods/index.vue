@@ -29,7 +29,11 @@
           <!-- 产出当前选择的商品规格信息，如果是完整的sku，产出完整的对象信息，如果不完整，则产出空对象 -->
           <GoodsSku :goods="listDetails" @change="selSku" />
           <!-- 数量组件 -->
-          <XtxNumbox :max="listDetails.inventory" :min="1" />
+          <XtxNumbox
+            :max="listDetails.inventory"
+            :min="1"
+            v-model="modelValue"
+          />
         </div>
       </div>
       <!-- 商品详情 -->
@@ -63,6 +67,8 @@ export default {
     GoodsName
   },
   setup () {
+    // 数量
+    const modelValue = ref(10)
     const listDetails = ref({})
     // 依赖数据谁用谁注入
     // 只能写第一层和setup的底层钩子函数执行有关-----可以获取到   listDetails是响应式的
@@ -86,7 +92,7 @@ export default {
         listDetails.value.inventory = sku.inventory
       }
     }
-    return { listDetails, getListDetail, selSku }
+    return { listDetails, getListDetail, selSku, modelValue }
   }
 }
 </script>
