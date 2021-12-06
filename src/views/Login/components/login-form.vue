@@ -17,7 +17,11 @@
           />
         </div>
         <!-- 表单验证错误信息提示 -->
-        <div v-if="errors.account" class="error">
+        <div
+          v-if="errors.account"
+          class="error"
+          :class="{ errtips: errors.account }"
+        >
           <i class="iconfont icon-warning" />请输入手机号
         </div>
       </div>
@@ -33,7 +37,11 @@
           />
         </div>
         <!-- 表单验证错误信息提示 -->
-        <div v-if="errors.password" class="error">
+        <div
+          v-if="errors.password"
+          class="error"
+          :class="{ errtips: errors.password }"
+        >
           <i class="iconfont icon-warning" />请输入密码
         </div>
       </div>
@@ -50,7 +58,11 @@
           <a href="javascript:;">《服务条款》</a>
         </div>
         <!-- 表单验证错误信息提示 -->
-        <div v-if="errors.isAgree" class="error">
+        <div
+          v-if="errors.isAgree"
+          class="error"
+          :class="{ errtips: errors.isAgree }"
+        >
           <i class="iconfont icon-warning" />{{ errors.isAgree }}
         </div>
       </div>
@@ -74,6 +86,8 @@ import { Form, Field } from 'vee-validate'
 import { reactive, ref } from 'vue'
 // 规则
 import rulesFns from '@/utils/vee-validate-schema'
+// 登录接口
+import { userAccountLogin } from '@/api/user'
 export default {
   /**
    *  安装
@@ -120,6 +134,7 @@ export default {
       if (valid) {
         // 掉接口
         console.log('loading')
+        await userAccountLogin(FormData)
       }
     }
     return { FormData, rules, fm, submit }
@@ -127,6 +142,45 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.errtips {
+  color: #e40438;
+  animation-name: errtips;
+  animation-duration: 0.5s;
+}
+@keyframes errtips {
+  10% {
+    transform: translateY(1px);
+  }
+  20% {
+    transform: translateY(-1px);
+  }
+  30% {
+    transform: translateY(1px);
+  }
+  40% {
+    transform: translateY(-1px);
+  }
+  50% {
+    transform: translateY(1px);
+  }
+  60% {
+    transform: translateY(-1px);
+  }
+  70% {
+    transform: translateY(1px);
+  }
+  80% {
+    transform: translateY(-1px);
+  }
+  90% {
+    transform: translateY(1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+// 账号容器
 // 账号容器
 .account-box {
   .toggle {
