@@ -86,8 +86,10 @@ import { Form, Field } from 'vee-validate'
 import { reactive, ref } from 'vue'
 // 规则
 import rulesFns from '@/utils/vee-validate-schema'
-// 登录接口
-import { userAccountLogin } from '@/api/user'
+import { useStore } from 'vuex'
+import { message } from '@/components/Message'
+// 路由
+
 export default {
   /**
    *  安装
@@ -101,6 +103,8 @@ export default {
     Field
   },
   setup () {
+    // store实例
+    const store = useStore()
     // 表单实例
     const fm = ref(null)
     // 表单数据
@@ -134,7 +138,14 @@ export default {
       if (valid) {
         // 掉接口
         console.log('loading')
-        await userAccountLogin(FormData)
+        try {
+          // 如果用ref要.value
+          store.dispatch('user/getUser', FormData)
+          message.success({ type: 'success', text: '登录成功' })
+        } catch (error) {
+          message.success({ type: 'error', text: '登录失败' })
+          console.log('登录失败', error)
+        }
       }
     }
     return { FormData, rules, fm, submit }
