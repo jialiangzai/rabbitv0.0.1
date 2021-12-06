@@ -1,18 +1,40 @@
 <template>
   <div class="account-box">
-    <div class="form">
+    <!-- 开启规则不用v-model数据但是要写错误信息 -->
+    <Form class="form" :validation-schema="rules" v-slot="{ errors }">
+      <!-- 错误信息如果有错误返回一个错误对象中有错误信息 通过返回null-->
+      <p>{{ errors }}</p>
+      <!-- 表单元素 -->
       <div class="form-item">
         <div class="input">
           <i class="iconfont icon-user"></i>
-          <input type="text" placeholder="请输入用户名或手机号" />
+          <Field
+            type="text"
+            placeholder="请输入用户名或手机号"
+            v-model="FormData.account"
+            name="account"
+            :class="{ error: errors.account }"
+          />
         </div>
         <!-- 表单验证错误信息提示 -->
-        <!-- <div class="error"><i class="iconfont icon-warning" />请输入手机号</div> -->
+        <div v-if="errors.account" class="error">
+          <i class="iconfont icon-warning" />请输入手机号
+        </div>
       </div>
       <div class="form-item">
         <div class="input">
           <i class="iconfont icon-lock"></i>
-          <input type="password" placeholder="请输入密码" />
+          <Field
+            type="password"
+            placeholder="请输入密码"
+            v-model="FormData.password"
+            name="password"
+            :class="{ error: errors.password }"
+          />
+        </div>
+        <!-- 表单验证错误信息提示 -->
+        <div v-if="errors.password" class="error">
+          <i class="iconfont icon-warning" />请输入密码
         </div>
       </div>
       <div class="form-item">
@@ -26,7 +48,7 @@
         </div>
       </div>
       <a href="javascript:;" class="btn">登录</a>
-    </div>
+    </Form>
     <div class="action">
       <img
         src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
@@ -39,7 +61,46 @@
     </div>
   </div>
 </template>
+<script>
+// vee-validate提供组件需要注册类似element中el-Form
+import { Form, Field } from 'vee-validate'
+import { reactive } from 'vue'
+// 规则
+import rulesFns from '@/utils/vee-validate-schema'
+export default {
+  /**
+   *  安装
+   * 准备表单数据和校验规则
+   * 使用form和field等组件
+   */
+  components: {
+    // 表单
+    Form,
+    // 表单域input
+    Field
+  },
+  setup () {
+    // 表单数据
+    const FormData = reactive({
+      account: '',
+      password: '',
+      isAgree: false
+    })
+    // 表单规则----普通对象也行 注意不能重名了rules
+    const rules = reactive({
+      account: rulesFns.account,
+      password: rulesFns.password
+      // isAgree: rulesFns.isAgree
+    })
+    // 1. 把input改成 Field 组件，默认解析成input
+    // 2. Field 添加name属性，作用是指定使用规则中哪个校验规则(函数)
+    // 3. Field添加v - model，作用是提供表单数据的双向绑定
+    // 4. 发生表单校验错误，显示错误类名error，提示红色边框并显示errors对象中的错误提示信息
 
+    return { FormData, rules }
+  }
+}
+</script>
 <style lang="less" scoped>
 // 账号容器
 .account-box {
