@@ -34,20 +34,29 @@
             :min="1"
             v-model="modelValue"
           />
-          <!-- 底层 -->
+          <!-- 底层关于.sync被合并到了v-model vue3可以绑定多个v-model但是要有各自名字 v-model:自己起的名字默认值是modelValue ；emits:['update:自定义的名字']-->
           <!-- <XtxNumbox
             :max="listDetails.inventory"
             :min="1"
             :modelValue="modelValue"
             @update:modelValue="modelValue = $event"
           /> -->
+          <!-- 按钮组件加入购物车 默认插槽动态去结构-->
+          <XtxButton size="large" type="red"> 加入购物车 </XtxButton>
         </div>
       </div>
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs"></div>
+          <div class="goods-tabs">
+            <img
+              v-for="(url, i) in listDetails.details.pictures"
+              :key="i"
+              v-imglazy="url"
+              alt=""
+            />
+          </div>
         </div>
         <!-- 24热榜+专题推荐 -->
         <div class="goods-aside"></div>
@@ -136,6 +145,10 @@ export default {
 .goods-tabs {
   min-height: 600px;
   background: #fff;
+  img {
+    // 撑满
+    width: 100%;
+  }
 }
 .goods-warn {
   min-height: 600px;

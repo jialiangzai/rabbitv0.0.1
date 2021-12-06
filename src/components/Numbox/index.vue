@@ -48,6 +48,7 @@ export default {
       num.value--
       emit('update:modelValue', num.value)
     }
+    // 组件一般都有俩种状态，一个是自己维护的响应式数据 （data）一个是由父组件传下来的数据，v-model语法糖它只能保证父组件中的数据可以同步到props这一层，如果你想让父组件中数据和自己维护的数据保持同步的话，需要自行监听props中的数据，在回调中完成数据同步
     // 同步数据modelValue和num 父====》子
     watch(() => props.modelValue, (newValue) => {
       num.value = newValue
