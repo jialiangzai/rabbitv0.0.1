@@ -113,7 +113,7 @@ export default {
     const fm = ref(null)
     // 表单数据
     const FormData = reactive({
-      account: 'xiaotuxian001', // 用户名
+      account: 'dijia', // 用户名
       password: '123456', // 密码
       // 父改子数据不同步无效果因为插件还没更新好所以默认要给false
       isAgree: false
