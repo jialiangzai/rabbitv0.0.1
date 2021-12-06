@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 export default {
   name: 'XtxNumbox',
   // 打折活动及库存特殊情况由父组件传入实现复用性最大化
@@ -28,7 +28,7 @@ export default {
       default: 10
     }
   },
-  setup (props, { commit }) {
+  setup (props, { emit }) {
     // 数量 默认值是1
     const num = ref(1)
     // 加
@@ -38,7 +38,7 @@ export default {
       }
       num.value++
       // 同步父组件 （子 -> 父）
-      commit('update:modelValue', num.value)
+      emit('update:modelValue', num.value)
     }
     // 减
     const sub = () => {
@@ -46,7 +46,14 @@ export default {
         return
       }
       num.value--
+      emit('update:modelValue', num.value)
     }
+    // 同步数据modelValue和num 父====》子
+    watch(() => props.modelValue, (newValue) => {
+      num.value = newValue
+    }, {
+      immediate: true
+    })
     return { num, add, sub }
   }
 }

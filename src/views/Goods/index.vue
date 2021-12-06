@@ -34,6 +34,13 @@
             :min="1"
             v-model="modelValue"
           />
+          <!-- 底层 -->
+          <!-- <XtxNumbox
+            :max="listDetails.inventory"
+            :min="1"
+            :modelValue="modelValue"
+            @update:modelValue="modelValue = $event"
+          /> -->
         </div>
       </div>
       <!-- 商品详情 -->
@@ -68,7 +75,7 @@ export default {
   },
   setup () {
     // 数量
-    const modelValue = ref(10)
+    const modelValue = ref(1)
     const listDetails = ref({})
     // 依赖数据谁用谁注入
     // 只能写第一层和setup的底层钩子函数执行有关-----可以获取到   listDetails是响应式的
