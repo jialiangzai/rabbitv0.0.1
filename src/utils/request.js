@@ -34,7 +34,8 @@ instance.interceptors.response.use(
       // 被动的 需要带当前401页面地址登录后继续浏览====因为路由可能携带参数用fullPath全地址
       // 这里注意获取401页面路由地址在vue3中发生变化是ref对象要.value
       // encodeURIComponent 转换uri编码，防止解析地址出问题
-
+      // 清除用户信息在vuex
+      store.dispatch('user/logout')
       const redirectUrl = encodeURIComponent(router.currentRoute.value.fullPath)
       // 因为是被动跳转用replace不用push
       router.replace(`/login?redirectUrl=${redirectUrl}`)

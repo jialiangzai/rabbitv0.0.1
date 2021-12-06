@@ -43,6 +43,10 @@ export default {
       })
       console.log('登录人信息', result)
       commit('setUser', result)
+    },
+    // 退出-----调用时直接调actions就行了
+    logout ({ commit }) {
+      commit('delUser')
     }
   }
 }

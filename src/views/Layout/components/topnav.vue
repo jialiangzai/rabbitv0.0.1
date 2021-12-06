@@ -6,9 +6,12 @@
         <!-- template不会渲染到页面还能实现条件判断 -->
         <template v-if="profile.token">
           <li>
-            <a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a>
+            <a href="javascript:;"
+              ><i class="iconfont icon-user"></i
+              >{{ profile.nickname || profile.account }}</a
+            >
           </li>
-          <li><a href="javascript:;">退出登录</a></li>
+          <li><a href="javascript:;" @click="loaout">退出登录</a></li>
         </template>
         <!-- 未登录 -->
         <template v-else>
@@ -28,13 +31,31 @@
   </nav>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { useRouter } from 'vue-router'
+import { mapState, useStore } from 'vuex'
 export default {
   name: 'AppTopnav',
   // map目前还是用vue2
   computed: {
     // 使用带命名空间模块数据， 第一个参数：模块名称，第二个是需要映射的数据
     ...mapState('user', ['profile'])
+  },
+  setup () {
+    const store = useStore()
+    const router = useRouter()
+    const loaout = () => {
+      /**
+       * 1. 清除本地用户信息
+       * 2. 路由跳转
+       *  */
+      store.dispatch('user/logout')
+      // 主动退出不带参数
+      router.replace('/login')
+    }
+
+    return {
+      loaout
+    }
   }
 }
 </script>

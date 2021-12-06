@@ -87,9 +87,9 @@ import { reactive, ref } from 'vue'
 // 规则
 import rulesFns from '@/utils/vee-validate-schema'
 import { useStore } from 'vuex'
-import { message } from '@/components/Message'
+import msg from '@/components/Message'
+import { useRoute, useRouter } from 'vue-router'
 // 路由
-
 export default {
   /**
    *  安装
@@ -103,14 +103,18 @@ export default {
     Field
   },
   setup () {
+    // router实例
+    const router = useRouter()
+    // 路由规则
+    const route = useRoute()
     // store实例
     const store = useStore()
     // 表单实例
     const fm = ref(null)
     // 表单数据
     const FormData = reactive({
-      account: '',
-      password: '',
+      account: 'xiaotuxian001', // 用户名
+      password: '123456', // 密码
       // 父改子数据不同步无效果因为插件还没更新好所以默认要给false
       isAgree: false
     })
@@ -137,14 +141,16 @@ export default {
       // console.log(res)
       if (valid) {
         // 掉接口
-        console.log('loading')
+        // console.log('loading')
         try {
           // 如果用ref要.value
-          store.dispatch('user/getUser', FormData)
-          message.success({ type: 'success', text: '登录成功' })
+          await store.dispatch('user/getUser', FormData)
+          msg({ type: 'success', text: '登录成功' })
+          // router跳转---携带参数
+          router.replace(route.query.redirectUrl || '/')
         } catch (error) {
-          message.success({ type: 'error', text: '登录失败' })
-          console.log('登录失败', error)
+          console.dir(error)
+          msg({ type: 'error', text: error.response.data.message })
         }
       }
     }
