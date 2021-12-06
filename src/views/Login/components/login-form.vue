@@ -39,12 +39,19 @@
       </div>
       <div class="form-item">
         <div class="agree">
-          <!-- 单选框 -->
-          <XtxCheckbox />
-          <span>我已同意</span>
+          <!-- 单选框 支持双向绑定-->
+          <!-- <XtxCheckbox v-model="FormData.isAgree"/> -->
+          <!-- 使用Field来渲染一个自定义的组件 而不是浏览器支持的原生标签时，需要我们添加as属性来渲染自定义组件 -->
+          <Field v-model="FormData.isAgree" as="XtxCheckbox" name="isAgree">
+            <span>我已同意</span>
+          </Field>
           <a href="javascript:;">《隐私条款》</a>
           <span>和</span>
           <a href="javascript:;">《服务条款》</a>
+        </div>
+        <!-- 表单验证错误信息提示 -->
+        <div v-if="errors.isAgree" class="error">
+          <i class="iconfont icon-warning" />{{ errors.isAgree }}
         </div>
       </div>
       <a href="javascript:;" class="btn" @click="submit">登录</a>
@@ -86,13 +93,14 @@ export default {
     const FormData = reactive({
       account: '',
       password: '',
+      // 父改子数据不同步无效果因为插件还没更新好所以默认要给false
       isAgree: false
     })
     // 表单规则----普通对象也行 注意不能重名了rules
     const rules = reactive({
       account: rulesFns.account,
-      password: rulesFns.password
-      // isAgree: rulesFns.isAgree
+      password: rulesFns.password,
+      isAgree: rulesFns.isAgree
     })
     // 1. 把input改成 Field 组件，默认解析成input
     // 2. Field 添加name属性，作用是指定使用规则中哪个校验规则(函数)
