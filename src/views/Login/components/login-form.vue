@@ -1,7 +1,7 @@
 <template>
   <div class="account-box">
     <!-- 开启规则不用v-model数据但是要写错误信息 -->
-    <Form class="form" :validation-schema="rules" v-slot="{ errors }">
+    <Form class="form" :validation-schema="rules" v-slot="{ errors }" ref="fm">
       <!-- 错误信息如果有错误返回一个错误对象中有错误信息 通过返回null-->
       <p>{{ errors }}</p>
       <!-- 表单元素 -->
@@ -47,7 +47,7 @@
           <a href="javascript:;">《服务条款》</a>
         </div>
       </div>
-      <a href="javascript:;" class="btn">登录</a>
+      <a href="javascript:;" class="btn" @click="submit">登录</a>
     </Form>
     <div class="action">
       <img
@@ -64,7 +64,7 @@
 <script>
 // vee-validate提供组件需要注册类似element中el-Form
 import { Form, Field } from 'vee-validate'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 // 规则
 import rulesFns from '@/utils/vee-validate-schema'
 export default {
@@ -80,6 +80,8 @@ export default {
     Field
   },
   setup () {
+    // 表单实例
+    const fm = ref(null)
     // 表单数据
     const FormData = reactive({
       account: '',
@@ -97,7 +99,22 @@ export default {
     // 3. Field添加v - model，作用是提供表单数据的双向绑定
     // 4. 发生表单校验错误，显示错误类名error，提示红色边框并显示errors对象中的错误提示信息
 
-    return { FormData, rules }
+    // 整体表单校验
+    // 1. 通过ref获得表单组件对象
+    // 2. 执行组件对象身上的validate方法 （执行完毕返回promise对象）
+
+    const submit = async () => {
+      // await
+      // 调用接口
+      // console.log('loading', fm.value.validate())
+      const { valid } = await fm.value.validate() // 拿到valid布尔值
+      // console.log(res)
+      if (valid) {
+        // 掉接口
+        console.log('loading')
+      }
+    }
+    return { FormData, rules, fm, submit }
   }
 }
 </script>
