@@ -6,6 +6,8 @@ const Layout = () => import('@/views/Layout')
 const Home = () => import('@/views/Home')
 // 详情页
 const Detail = () => import('@/views/Goods')
+// 登录
+const Login = () => import('@/views/Login')
 // 路由规则
 const routes = [
   {
@@ -21,6 +23,11 @@ const routes = [
       component: Detail
     }
     ]
+  },
+  // 登录路由
+  {
+    path: '/login',
+    component: Login
   }
 ]
 
