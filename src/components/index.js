@@ -17,8 +17,10 @@ import Sku from './Sku'
 import Numbox from './Numbox'
 // 登录按钮
 import BUtton from './Button'
+// 同意隐私可选框
+import CheckBox from './CheckBox'
 // 放置到数组中循环遍历
-const cps = [Skeleton, Slider, XtxMore, Bread, BreadItem, City, Sku, Numbox, BUtton]
+const cps = [Skeleton, Slider, XtxMore, Bread, BreadItem, City, Sku, Numbox, BUtton, CheckBox]
 export default {
   // vue2参数是构造函数，vue3是vue实例(app)
   install (app) {
