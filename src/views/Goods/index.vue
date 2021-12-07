@@ -123,7 +123,7 @@ const useSkusel = (listDetails) => {
 const useAddCart = (listDetails, currSel, modelValues) => {
   const store = useStore()
   // 加入购物车
-  const addCart = () => {
+  const addCart = async () => {
     /**
        * 需要满足的条件：
        * 1.完整有效的sku (选择商品的sku属性==》产生sku有效信息)
@@ -157,7 +157,13 @@ const useAddCart = (listDetails, currSel, modelValues) => {
       count: modelValues.value
     })
     console.log('秒了', carts)
-    store.dispatch('cart/addCartActions', carts)
+    try {
+      const res = await store.dispatch('cart/addCartActions', carts)
+      // 当actions中无返回值的时候await拿到的是undefined，如果有返回值拿到的就是返回值此时是 加入购物车成功
+      console.log('我是加入的回调promise', res)
+      msg({ type: 'success', text: res, time: 2000 })
+    } catch (error) {
+    }
   }
   return {
     addCart

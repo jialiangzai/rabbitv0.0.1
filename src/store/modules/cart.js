@@ -37,6 +37,7 @@ export default {
   actions: {
     // 注意跨模块调用数据在上下文context使用rootState----拿到所有的vuex数据
     // goodCart要添加的商品对象
+    // actions中的方法函数都有一个返回值且是promise对象即使用者调用dispatch方法返回promise
     addCartActions ({ commit, rootState }, goodCart) {
       console.log('上下文rootState数据', rootState)
       if (rootState.user.profile.token) {
@@ -44,6 +45,7 @@ export default {
       } else {
         // 未登录
         commit('addListCart', goodCart)
+        return '加入购物车成功'
       }
     }
   }
