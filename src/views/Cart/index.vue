@@ -96,7 +96,9 @@
           <span class="red">¥{{ validSeledTotal.toFixed(2) }}</span>
         </div>
         <div class="total">
-          <XtxButton type="primary">下单结算</XtxButton>
+          <XtxButton type="primary" @click="$router.push('/member/order')"
+            >下单结算</XtxButton
+          >
         </div>
       </div>
     </div>

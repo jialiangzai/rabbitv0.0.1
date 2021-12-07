@@ -10,6 +10,8 @@ const Detail = () => import('@/views/Goods')
 const Login = () => import('@/views/Login')
 // 购物车
 const Cart = () => import('@/views/Cart')
+// 订单列表
+const Member = () => import('@/views/Member/order/index.vue')
 // 路由规则
 const routes = [
   {
@@ -28,6 +30,11 @@ const routes = [
     {
       path: '/cart',
       component: Cart
+    },
+    // 订单列表
+    {
+      path: '/member/order',
+      component: Member
     }
     ]
   },
