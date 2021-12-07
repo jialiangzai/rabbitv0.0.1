@@ -8,6 +8,8 @@ const Home = () => import('@/views/Home')
 const Detail = () => import('@/views/Goods')
 // 登录
 const Login = () => import('@/views/Login')
+// 购物车
+const Cart = () => import('@/views/Cart')
 // 路由规则
 const routes = [
   {
@@ -21,6 +23,11 @@ const routes = [
     {
       path: '/goods/:id',
       component: Detail
+    },
+    // 购物车
+    {
+      path: '/cart',
+      component: Cart
     }
     ]
   },

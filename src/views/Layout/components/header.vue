@@ -14,9 +14,11 @@
       </div>
       <!-- 购物车 -->
       <div class="cart">
-        <a class="curr" href="#">
-          <i class="iconfont icon-cart"></i><em>2</em>
-        </a>
+        <router-link class="curr" to="/cart">
+          <!-- 几种商品 -->
+          <i class="iconfont icon-cart"></i
+          ><em>{{ $store.state.cart.list.length }}</em>
+        </router-link>
       </div>
     </div>
   </header>
