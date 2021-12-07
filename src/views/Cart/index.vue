@@ -63,7 +63,12 @@
                 </p>
               </td>
               <td class="tc">
-                <XtxNumbox :isShowCount="false" v-model="good.count" />
+                <!-- <XtxNumbox :isShowCount="false" v-model="good.count" /> -->
+                <XtxNumbox
+                  :isShowCount="false"
+                  :modelValue="good.count"
+                  @update:modelValue="changeNum(good, $event)"
+                />
               </td>
               <!-- 小计 -->
               <td class="tc">
@@ -142,7 +147,15 @@ export default {
         msg({ type: 'error', text: '操作失败' })
       }
     }
-    return { singnChe, setIsAllFn, delCheck }
+    // 修改数量
+    const changeNum = async (good, num) => {
+      try {
+        await store.dispatch('cart/changeNumActions', { good, num })
+      } catch (error) {
+        console.dir(error)
+      }
+    }
+    return { singnChe, setIsAllFn, delCheck, changeNum }
   }
 }
 </script>

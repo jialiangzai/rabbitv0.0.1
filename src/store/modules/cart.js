@@ -72,6 +72,10 @@ export default {
       // const i = state.list.findIndex(item => item.id === good.id)
       // state.list.splice(i, 1)
       state.list = state.list.filter(item => item.id !== good.id)
+    },
+    // 修改数量
+    changeNum (state, { good, num }) {
+      state.list.find(item => item.skuId === good.skuId).count = num
     }
   },
   /**
@@ -123,6 +127,15 @@ export default {
         // 未登录
         commit('delSign', good)
         return '删除成功'
+      }
+    },
+    // 修改数量
+    changeNumActions ({ commit, rootState }, { good, num }) {
+      if (rootState.user.profile.token) {
+        // 已经登录---调接口
+      } else {
+        // 未登录
+        commit('changeNum', { good, num })
       }
     }
   }
