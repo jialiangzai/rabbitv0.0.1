@@ -45,9 +45,6 @@
           <XtxButton size="large" type="red" @click="addCart">
             加入购物车
           </XtxButton>
-          <p>
-            {{ currSel }}
-          </p>
         </div>
       </div>
       <!-- 商品详情 -->
@@ -81,6 +78,88 @@ import GoodsImage from './components/goods-image.vue'
 import GoodsSales from './components/goods-sales.vue'
 import GoodsName from './components/goods-name.vue'
 import msg from '@/components/Message'
+// 获取详情数据
+const useDetailData = () => {
+  // 数量
+  const modelValue = ref(1)
+  const listDetails = ref({})
+  // 依赖数据谁用谁注入
+  // 只能写第一层和setup的底层钩子函数执行有关-----可以获取到   listDetails是响应式的
+  provide('goods', listDetails)
+  // 路由参数对象是一个reactive对象响应式的
+  const route = useRoute()
+  const getListDetail = async () => {
+    const { result } = await findGoods(route.params.id)
+    console.log('商品详情', result)
+    listDetails.value = result
+  }
+  getListDetail()
+  return { listDetails, modelValue }
+}
+// 存储有效的sku信息
+const useSkusel = (listDetails) => {
+  // 存储有效的sku信息
+  const currSel = ref(null)
+  // sku选择事件
+  const selSku = (sku) => {
+    console.log('选中的sku信息', sku)
+    // 判断是否有效 =====id
+    if (sku.skuId) {
+      // 修改商品的现价原价库存信息
+      listDetails.value.price = sku.price
+      listDetails.value.oldPrice = sku.oldPrice
+      listDetails.value.inventory = sku.inventory
+      // 有效的sku
+      currSel.value = sku
+    } else {
+      // 无效的sku对象 清除上次选择----注意这里必须是null如果是一个空对象{}表示true
+      currSel.value = null
+    }
+  }
+  return { selSku, currSel }
+}
+// 加入购物车
+const useAddCart = (listDetails, currSel, selSku, modelValue) => {
+  // 加入购物车
+  const addCart = () => {
+    /**
+       * 需要满足的条件：
+       * 1.完整有效的sku (选择商品的sku属性==》产生sku有效信息)
+       * 2.有效sku商品数据库存不能为0
+       */
+    if (!currSel.value) {
+      return msg({ type: 'warn', text: '请选择完整的sku信息', time: 2000 })
+    }
+    if (currSel.value.inventory === 0) {
+      return msg({ type: 'warn', text: '亲，你的宝贝买完了', time: 2000 })
+    }
+
+    // 购物车数据与后台接口一致
+    const carts = reactive({
+      id: listDetails.value.id,
+      name: listDetails.value.name,
+      picture: listDetails.value.mainPictures[0],
+      // sku属性ID（唯一）
+      skuId: selSku.value.skuId,
+      // 价格
+      price: selSku.value.oldPrice,
+      nowPrice: selSku.value.price,
+      attrsText: selSku.value.specsText,
+      // 库存
+      stock: selSku.value.inventory,
+      // 是否在购物车选中
+      selected: true,
+      // 是否是有效商品
+      isEffective: true,
+      // 购买数量
+      count: modelValue.value
+    })
+    console.log('秒了', carts)
+  }
+  return {
+    addCart
+  }
+}
 export default {
   name: 'XtxGoodsPage',
   components: {
@@ -89,77 +168,11 @@ export default {
     GoodsName
   },
   setup () {
-    // 数量
-    const modelValue = ref(1)
-    const listDetails = ref({})
-    // 依赖数据谁用谁注入
-    // 只能写第一层和setup的底层钩子函数执行有关-----可以获取到   listDetails是响应式的
-    provide('goods', listDetails)
-    // 路由参数对象是一个reactive对象响应式的
-    const route = useRoute()
-    const getListDetail = async () => {
-      const { result } = await findGoods(route.params.id)
-      console.log('商品详情', result)
-      listDetails.value = result
-    }
-    getListDetail()
-    // 存储有效的sku信息
-    const currSel = ref(null)
-
-    // sku选择事件
-    const selSku = (sku) => {
-      console.log('选中的sku信息', sku)
-      // 判断是否有效 =====id
-      if (sku.skuId) {
-        // 修改商品的现价原价库存信息
-        listDetails.value.price = sku.price
-        listDetails.value.oldPrice = sku.oldPrice
-        listDetails.value.inventory = sku.inventory
-        // 有效的sku
-        currSel.value = sku
-      } else {
-        // 无效的sku对象 清除上次选择----注意这里必须是null如果是一个空对象{}表示true
-        currSel.value = null
-      }
-    }
-
-    // 加入购物车
-    const addCart = () => {
-      /**
-       * 需要满足的条件：
-       * 1.完整有效的sku (选择商品的sku属性==》产生sku有效信息)
-       * 2.有效sku商品数据库存>0
-       */
-      if (!currSel.value) {
-        return msg({ type: 'warn', text: '请选择完整的sku信息', time: 2000 })
-      }
-      if (currSel.value.inventory === 0) {
-        return msg({ type: 'warn', text: '亲，你的宝贝买完了', time: 2000 })
-      }
-
-      // 购物车数据与后台接口一致
-      const carts = reactive({
-        id: listDetails.value.id,
-        name: listDetails.value.name,
-        picture: listDetails.value.mainPictures[0],
-        // sku属性ID（唯一）
-        skuId: selSku.value.skuId,
-        // 价格
-        price: selSku.value.oldPrice,
-        nowPrice: selSku.value.price,
-        attrsText: selSku.value.specsText,
-        // 库存
-        stock: selSku.value.inventory,
-        // 是否在购物车选中
-        selected: true,
-        // 是否是有效商品
-        isEffective: true,
-        // 购买数量
-        count: modelValue.value
-      })
-      console.log('秒了', carts)
-    }
-    return { listDetails, getListDetail, selSku, modelValue, addCart, currSel, msg }
+    // 抽离 获取数据 sku选中规格  购物车
+    const { listDetails, modelValue } = useDetailData()
+    const { selSku, currSel } = useSkusel(listDetails)
+    const { addCart } = useAddCart(listDetails, currSel, selSku, modelValue)
+    return { listDetails, modelValue, addCart, currSel, msg, selSku }
   }
 }
 </script>
