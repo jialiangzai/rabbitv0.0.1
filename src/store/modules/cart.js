@@ -56,10 +56,16 @@ export default {
     /**
      *
      * @param {*} state
-     * @param {*} param1 当前选中的商品及状态
+     * @param {*} param1 当前选中的商品及状态------因为需要知道是哪一个具体的商品对象
      */
     setSignCheck (state, { good, sel }) {
       state.list.find(item => item.skuId === good.skuId).selected = sel
+    },
+    // 全选按钮状态
+    setTotal (state, sel) {
+      state.list.forEach(item => {
+        item.selected = sel
+      })
     }
   },
   /**
@@ -73,7 +79,7 @@ export default {
     // goodCart要添加的商品对象
     // actions中的方法函数都有一个返回值且是promise对象即使用者调用dispatch方法返回promise
     addCartActions ({ commit, rootState }, goodCart) {
-      console.log('上下文rootState数据', rootState)
+      // console.log('上下文rootState数据', rootState)
       if (rootState.user.profile.token) {
         // 已经登录---调接口
       } else {
@@ -84,12 +90,22 @@ export default {
     },
     // 单选
     signCheckActions ({ commit, rootState }, { good, sel }) {
-      console.log('上下文rootState数据', rootState)
+      // console.log('上下文rootState数据', rootState)
       if (rootState.user.profile.token) {
         // 已经登录---调接口
       } else {
         // 未登录
         commit('setSignCheck', { good, sel })
+        return '操作成功'
+      }
+    },
+    // 全选
+    TotalActions ({ commit, rootState }, sel) {
+      if (rootState.user.profile.token) {
+        // 已经登录---调接口
+      } else {
+        // 未登录
+        commit('setTotal', sel)
         return '操作成功'
       }
     }

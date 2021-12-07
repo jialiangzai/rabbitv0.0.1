@@ -10,7 +10,10 @@
           <thead>
             <tr>
               <th width="120">
-                <XtxCheckbox v-model="isAll">全选</XtxCheckbox>
+                <!-- <XtxCheckbox v-model="isAll">全选</XtxCheckbox> -->
+                <XtxCheckbox :modelValue="isAll" @update:modelValue="setIsAllFn"
+                  >全选</XtxCheckbox
+                >
               </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
@@ -104,8 +107,9 @@ export default {
   },
   setup () {
     const store = useStore()
+    // 单选
     const singnChe = async (good, isChe) => {
-      console.log(good, isChe)
+      // console.log(good, isChe)
       // 修改vuex数据正规
       try {
         const res = await store.dispatch('cart/signCheckActions', { good, isChe })
@@ -114,7 +118,16 @@ export default {
         msg({ type: 'error', text: '操作失败' })
       }
     }
-    return { singnChe }
+    // 全选 不穿参数默认就可以拿到子传父的数据所以模板没有写参数
+    const setIsAllFn = async (flag) => {
+      try {
+        const res = await store.dispatch('cart/TotalActions', flag)
+        msg({ type: 'success', text: res })
+      } catch (error) {
+        msg({ type: 'error', text: '操作失败' })
+      }
+    }
+    return { singnChe, setIsAllFn }
   }
 }
 </script>
