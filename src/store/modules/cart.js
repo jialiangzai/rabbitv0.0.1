@@ -4,6 +4,31 @@ export default {
   state: () => ({
     list: []
   }),
+  getters: {
+    // 可能存在无效过期的商品所以过滤
+    // 1. 有效商品列表 =》无效商品（没库存或下架了）
+    // 2. 选中的购物车商品数据
+    // 3. 选中商品总价
+    // 4. 购物车中有效商品是否是全部选中状态
+    // getters类似计算属性可以依赖另一个计算属性进行计算即第二个参数
+    // 计算有效商品列表 isEffective = true  filter
+    validList: state => {
+      // 留下isEffective为true的如果带花括号就写return
+      return state.list.filter(item => item.isEffective)
+    },
+    // 已选中列表 selected = true
+    validSeled: (state, getters) => {
+      return getters.validList.filter(item => item.selected)
+    },
+    // 已选择列表总钱数  selectedList 中所有项的单价*数据进行叠加
+    validSeledTotal: (state, getters) => {
+      return getters.validSeled.reduce((total, item) => (total += item.nowPrice * item.count), 0)
+    },
+    // 全选：有效列表中的seleted字段全为true 才为true
+    isAll: (state, getters) => {
+      return getters.validList.every(item => item.selected)
+    }
+  },
   mutations: {
     // 向list中添加商品数据
     /**
