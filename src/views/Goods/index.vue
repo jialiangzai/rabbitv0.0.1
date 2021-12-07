@@ -32,7 +32,7 @@
           <XtxNumbox
             :max="listDetails.inventory"
             :min="1"
-            v-model="modelValue"
+            v-model="modelValues"
           />
           <!-- 底层关于.sync被合并到了v-model vue3可以绑定多个v-model但是要有各自名字 v-model:自己起的名字默认值是modelValue ；emits:['update:自定义的名字']-->
           <!-- <XtxNumbox
@@ -78,10 +78,11 @@ import GoodsImage from './components/goods-image.vue'
 import GoodsSales from './components/goods-sales.vue'
 import GoodsName from './components/goods-name.vue'
 import msg from '@/components/Message'
+import { useStore } from 'vuex'
 // 获取详情数据
 const useDetailData = () => {
   // 数量
-  const modelValue = ref(1)
+  const modelValues = ref(1)
   const listDetails = ref({})
   // 依赖数据谁用谁注入
   // 只能写第一层和setup的底层钩子函数执行有关-----可以获取到   listDetails是响应式的
@@ -94,7 +95,7 @@ const useDetailData = () => {
     listDetails.value = result
   }
   getListDetail()
-  return { listDetails, modelValue }
+  return { listDetails, modelValues }
 }
 // 存储有效的sku信息
 const useSkusel = (listDetails) => {
@@ -119,7 +120,8 @@ const useSkusel = (listDetails) => {
   return { selSku, currSel }
 }
 // 加入购物车
-const useAddCart = (listDetails, currSel, selSku, modelValue) => {
+const useAddCart = (listDetails, currSel, modelValues) => {
+  const store = useStore()
   // 加入购物车
   const addCart = () => {
     /**
@@ -140,21 +142,22 @@ const useAddCart = (listDetails, currSel, selSku, modelValue) => {
       name: listDetails.value.name,
       picture: listDetails.value.mainPictures[0],
       // sku属性ID（唯一）
-      skuId: selSku.value.skuId,
+      skuId: currSel.value.skuId,
       // 价格
-      price: selSku.value.oldPrice,
-      nowPrice: selSku.value.price,
-      attrsText: selSku.value.specsText,
+      price: currSel.value.oldPrice,
+      nowPrice: currSel.value.price,
+      attrsText: currSel.value.specsText,
       // 库存
-      stock: selSku.value.inventory,
+      stock: currSel.value.inventory,
       // 是否在购物车选中
       selected: true,
       // 是否是有效商品
       isEffective: true,
       // 购买数量
-      count: modelValue.value
+      count: modelValues.value
     })
     console.log('秒了', carts)
+    store.dispatch('cart/addCartActions', carts)
   }
   return {
     addCart
@@ -169,10 +172,10 @@ export default {
   },
   setup () {
     // 抽离 获取数据 sku选中规格  购物车
-    const { listDetails, modelValue } = useDetailData()
+    const { listDetails, modelValues } = useDetailData()
     const { selSku, currSel } = useSkusel(listDetails)
-    const { addCart } = useAddCart(listDetails, currSel, selSku, modelValue)
-    return { listDetails, modelValue, addCart, currSel, msg, selSku }
+    const { addCart } = useAddCart(listDetails, currSel, modelValues)
+    return { listDetails, modelValues, addCart, currSel, msg, selSku }
   }
 }
 </script>
