@@ -72,7 +72,11 @@
                 </p>
               </td>
               <td class="tc">
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <p>
+                  <a class="green" href="javascript:;" @click="delCheck(good)"
+                    >删除</a
+                  >
+                </p>
               </td>
             </tr>
           </tbody>
@@ -127,7 +131,18 @@ export default {
         msg({ type: 'error', text: '操作失败' })
       }
     }
-    return { singnChe, setIsAllFn }
+    // 删除
+    // 1. 点击删除按钮记录当前点击的商品数据
+    // 2. 使用商品数据的skuId在vuex中找到对应项删除（splice）=》调用已有删除action逻辑
+    const delCheck = async (good) => {
+      try {
+        const res = await store.dispatch('cart/delSignActions', good)
+        msg({ type: 'success', text: res })
+      } catch (error) {
+        msg({ type: 'error', text: '操作失败' })
+      }
+    }
+    return { singnChe, setIsAllFn, delCheck }
   }
 }
 </script>

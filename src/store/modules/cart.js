@@ -66,6 +66,12 @@ export default {
       state.list.forEach(item => {
         item.selected = sel
       })
+    },
+    // 删除某项商品
+    delSign (state, good) {
+      // const i = state.list.findIndex(item => item.id === good.id)
+      // state.list.splice(i, 1)
+      state.list = state.list.filter(item => item.id !== good.id)
     }
   },
   /**
@@ -107,6 +113,16 @@ export default {
         // 未登录
         commit('setTotal', sel)
         return '操作成功'
+      }
+    },
+    // 删除
+    delSignActions ({ commit, rootState }, good) {
+      if (rootState.user.profile.token) {
+        // 已经登录---调接口
+      } else {
+        // 未登录
+        commit('delSign', good)
+        return '删除成功'
       }
     }
   }
