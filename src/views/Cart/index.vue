@@ -22,7 +22,20 @@
           <!-- 有效商品 -->
           <tbody>
             <tr v-for="good in validList" :key="good.skuId">
-              <td><XtxCheckbox v-model="good.selected" /></td>
+              <td>
+                <!--
+                有效果,但是不推荐 在严格模式下会报错 必须走mutation函数进行修改才可以
+                难点：选择框最新的数据状态拿到 给它修改到vuex中对应的数据项上
+                父组件中需要拿到子组件中的状态  子传父   自定义事件 v-model完整写法
+                vue2 ===> :value+@input
+                vue3 ===> :modelValue + @update:modelValue
+               -->
+                <!-- <XtxCheckbox v-model="good.selected" /> -->
+                <XtxCheckbox
+                  :modelValue="good.selected"
+                  @update:modelValue="singnChe(good, $event)"
+                />
+              </td>
               <td>
                 <div class="goods">
                   <!-- 注意跳转的是商品的id -->
@@ -78,7 +91,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, useStore } from 'vuex'
+import msg from '@/components/Message/index'
 export default {
   name: 'XtxCartPage',
   computed: {
@@ -87,6 +101,20 @@ export default {
       'validSeled',
       'validSeledTotal',
       'isAll'])
+  },
+  setup () {
+    const store = useStore()
+    const singnChe = async (good, isChe) => {
+      console.log(good, isChe)
+      // 修改vuex数据正规
+      try {
+        const res = await store.dispatch('cart/signCheckActions', { good, isChe })
+        msg({ type: 'success', text: res })
+      } catch (error) {
+        msg({ type: 'error', text: '操作失败' })
+      }
+    }
+    return { singnChe }
   }
 }
 </script>

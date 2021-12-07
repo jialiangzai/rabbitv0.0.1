@@ -51,6 +51,15 @@ export default {
         // 没加入过购物车
         state.list.unshift(good)
       }
+    },
+    // 修改单选状态
+    /**
+     *
+     * @param {*} state
+     * @param {*} param1 当前选中的商品及状态
+     */
+    setSignCheck (state, { good, sel }) {
+      state.list.find(item => item.skuId === good.skuId).selected = sel
     }
   },
   /**
@@ -71,6 +80,17 @@ export default {
         // 未登录
         commit('addListCart', goodCart)
         return '加入购物车成功'
+      }
+    },
+    // 单选
+    signCheckActions ({ commit, rootState }, { good, sel }) {
+      console.log('上下文rootState数据', rootState)
+      if (rootState.user.profile.token) {
+        // 已经登录---调接口
+      } else {
+        // 未登录
+        commit('setSignCheck', { good, sel })
+        return '操作成功'
       }
     }
   }
