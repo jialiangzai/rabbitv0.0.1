@@ -119,20 +119,20 @@ export default {
   setup () {
     const store = useStore()
     // 单选
-    const singnChe = async (good, isChe) => {
+    const singnChe = async (good, sel) => {
       // console.log(good, isChe)
       // 修改vuex数据正规
       try {
-        const res = await store.dispatch('cart/signCheckActions', { good, isChe })
+        const res = await store.dispatch('cart/signCheckActions', { good, sel })
         msg({ type: 'success', text: res })
       } catch (error) {
         msg({ type: 'error', text: '操作失败' })
       }
     }
     // 全选 不穿参数默认就可以拿到子传父的数据所以模板没有写参数
-    const setIsAllFn = async (flag) => {
+    const setIsAllFn = async (sel) => {
       try {
-        const res = await store.dispatch('cart/TotalActions', flag)
+        const res = await store.dispatch('cart/TotalActions', sel)
         msg({ type: 'success', text: res })
       } catch (error) {
         msg({ type: 'error', text: '操作失败' })
