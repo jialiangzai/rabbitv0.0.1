@@ -1,5 +1,5 @@
 
-import { mergeLocalCart, findCartList } from '@/api/cart'
+import { mergeLocalCart, findCartList, insertCart } from '@/api/cart'
 // 购物车状态
 export default {
   namespaced: true,
@@ -79,7 +79,7 @@ export default {
     changeNum (state, { good, num }) {
       state.list.find(item => item.skuId === good.skuId).count = num
     },
-    // 清除赋值为空，有新数据合并
+    // 清除赋值为空，有新数据合并，业务功能
     // 存储后台购物车数据
     setList (state, list) {
       state.list = list
@@ -95,10 +95,17 @@ export default {
     // 注意跨模块调用数据在上下文context使用rootState----拿到所有的vuex数据
     // goodCart要添加的商品对象
     // actions中的方法函数都有一个返回值且是promise对象即使用者调用dispatch方法返回promise
-    addCartActions ({ commit, rootState }, goodCart) {
+    async addCartActions ({ commit, rootState, dispatch }, goodCart) {
       // console.log('上下文rootState数据', rootState)
       if (rootState.user.profile.token) {
         // 已经登录---调接口
+        /**
+         * 1.调接口改变数据库----后端会处理
+         * 2.本地和vuex数据没有改变要重新获取购物车数据
+         * setList
+         */
+        await insertCart(goodCart)
+        dispatch('getCartList')
       } else {
         // 未登录
         commit('addListCart', goodCart)
@@ -106,7 +113,7 @@ export default {
       }
     },
     // 单选
-    signCheckActions ({ commit, rootState }, { good, sel }) {
+    async signCheckActions ({ commit, rootState }, { good, sel }) {
       // console.log('上下文rootState数据', rootState)
       if (rootState.user.profile.token) {
         // 已经登录---调接口
@@ -176,8 +183,9 @@ export default {
         // 调接口-------此时存储到数据库
         await mergeLocalCart(mergeDataNs)
         // 所以拿到合并最新的购物车数据(当前登录人已合并的)同步vuex及本地
-        dispatch('getCartList')
       }
+      // 无论是否有都要进行拉新上方只是本地有购物车合并
+      dispatch('getCartList')
     }
   }
 }

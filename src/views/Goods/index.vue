@@ -158,6 +158,7 @@ const useAddCart = (listDetails, currSel, modelValues) => {
     })
     console.log('秒了', carts)
     try {
+      // 调用vuex的actions方法区分是否是登录状态
       const res = await store.dispatch('cart/addCartActions', carts)
       // 当actions中无返回值的时候await拿到的是undefined，如果有返回值拿到的就是返回值此时是 加入购物车成功
       console.log('我是加入的回调promise', res)
