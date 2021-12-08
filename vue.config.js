@@ -1,5 +1,9 @@
 const path = require('path')
 module.exports = {
+  // 必须在第一级层
+  chainWebpack: config => {
+    config.devServer.disableHostCheck(true)
+  },
   lintOnSave: true,
 
   // 打包后可以部署到任意目录
