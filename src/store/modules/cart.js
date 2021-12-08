@@ -1,5 +1,5 @@
 
-import { mergeLocalCart, findCartList, insertCart } from '@/api/cart'
+import { mergeLocalCart, findCartList, insertCart, deleteCart } from '@/api/cart'
 // 购物车状态
 export default {
   namespaced: true,
@@ -105,7 +105,9 @@ export default {
          * setList
          */
         await insertCart(goodCart)
+        // 拉新
         dispatch('getCartList')
+        return '加入购物车成功'
       } else {
         // 未登录
         commit('addListCart', goodCart)
@@ -134,9 +136,13 @@ export default {
       }
     },
     // 删除
-    delSignActions ({ commit, rootState }, good) {
+    async delSignActions ({ commit, rootState, dispatch }, good) {
       if (rootState.user.profile.token) {
-        // 已经登录---调接口
+        // 已经登录---调接口可以批量删除 @param {Array<string>} ids - skuId集合
+        await deleteCart([good.skuId])
+        // 拉新
+        dispatch('getCartList')
+        return '删除成功'
       } else {
         // 未登录
         commit('delSign', good)
