@@ -1,7 +1,9 @@
 
-import { ref } from 'vue'
+import { ref, onUnmounted, computed } from 'vue'
 // 检测组件进入可视化视口才去发送请求
-import { useIntersectionObserver } from '@vueuse/core'
+import { useIntersectionObserver, useIntervalFn } from '@vueuse/core'
+
+import dayjs from 'dayjs'
 
 // 封装监听目标元素进入视口的通用逻辑---->组件懒加载
 export function useObserver (apiFn) {
@@ -37,4 +39,49 @@ export function useObserver (apiFn) {
   )
   // 注意一定要返回target否则拿不到ref对象且模板无法使用
   return { target, targetIsVisible }
+}
+
+// 倒计时
+/**
+ *
+ * @param {*} time 倒计时的时间秒
+ *  自身秒数 开始倒计时 暂停倒计时 倒计时开始后展示的文本
+  return { countTime, start, pause, countTimeText }
+ */
+export function useCountDown (time) {
+  const countTime = ref(0)
+
+  // 计算属性基于现在的countTime做一个转换处理
+  const countTimeText = computed(() => {
+    // 完成转换逻辑
+    return dayjs.unix(countTime.value).format('mm分ss秒')
+  })
+
+  const { pause, resume } = useIntervalFn(() => {
+    /* your function */
+    // 自减逻辑
+    countTime.value--
+    // 到零停止
+    if (countTime.value <= 0) {
+      pause()
+    }
+  }, 1000, { immediate: false })
+
+  // 开始计时方法
+  function start (tm) {
+    if (countTime.value === 0) {
+      countTime.value = time || tm
+    }
+    resume()
+  }
+
+  // 清理一下定时器
+  // 组件的卸载之后
+  onUnmounted(() => {
+    pause()
+  })
+
+  // console.log(pause, resume, isActive)
+  // 自身秒数 开始倒计时 暂停倒计时 倒计时开始后展示的文本
+  return { countTime, start, pause, countTimeText }
 }
