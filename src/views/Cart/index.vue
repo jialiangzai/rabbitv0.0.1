@@ -157,7 +157,11 @@ export default {
         console.dir(error)
       }
     }
-    return { singnChe, setIsAllFn, delCheck, changeNum }
+    // 获取后天购物车列表
+    const getListcart = async () => {
+      await store.dispatch('cart/getCartList')
+    }
+    return { singnChe, setIsAllFn, delCheck, changeNum, getListcart }
   }
 }
 </script>

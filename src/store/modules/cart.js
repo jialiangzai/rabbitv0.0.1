@@ -1,3 +1,5 @@
+
+import { mergeLocalCart, findCartList } from '@/api/cart'
 // 购物车状态
 export default {
   namespaced: true,
@@ -76,6 +78,11 @@ export default {
     // 修改数量
     changeNum (state, { good, num }) {
       state.list.find(item => item.skuId === good.skuId).count = num
+    },
+    // 存储最新后台购物车数据
+    // 存储后台购物车数据
+    setList (state, list) {
+      state.list = list
     }
   },
   /**
@@ -136,6 +143,40 @@ export default {
       } else {
         // 未登录
         commit('changeNum', { good, num })
+      }
+    },
+    // 登录后台购物车信息有token----拿到最新的购物车
+    async getCartList ({ commit }) {
+      const { result } = await findCartList()
+      console.log('你猜', result)
+      commit('setList', result)
+    },
+    // 登录后合并购物车
+    async mergeLocalCartActions ({ state, dispatch }) {
+      // 本地购物车数据为零无需合并有购物车数据才去合并调接口获取最新的购物车数据
+      if (state.list.length > 0) {
+        // 已经登录---调接口
+        // * @param { Array < object >} cartList - 本地购物车数组
+        //   * @param { String } item.skuId - 商品skuId
+        //     * @param { Boolean } item.selected - 是否选中
+        //       * @param { Integer } item.count - 数量
+        // const mergeData=[{skuId,selected,count}] 只需要三个
+        // 用map映射为我们所需的数组
+        // const mergeDataNs = state.list.map((item) => {
+        //   return {
+        //     skuId: item.skuId,
+        //     selected: item.selected,
+        //     count: item.count
+        //   }
+        // })
+        // 第二种方式直接解构
+        const mergeDataNs = state.list.map(({ skuId, selected, count }) => {
+          return { skuId, selected, count }
+        })
+        // 调接口-------此时存储到数据库
+        await mergeLocalCart(mergeDataNs)
+        // 所以拿到合并最新的购物车数据(当前登录人已合并的)同步vuex及本地
+        dispatch('getCartList')
       }
     }
   }

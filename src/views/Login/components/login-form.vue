@@ -146,6 +146,8 @@ export default {
           // 如果用ref要.value
           await store.dispatch('user/getUser', FormData)
           msg({ type: 'success', text: '登录成功' })
+          // 获取购物车最新数据(已合并)
+          store.dispatch('cart/mergeLocalCartActions')
           // router跳转---携带参数
           router.replace(route.query.redirectUrl || '/')
         } catch (error) {
