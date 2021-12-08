@@ -46,7 +46,13 @@ export default {
     },
     // 退出-----调用时直接调actions就行了
     logout ({ commit }) {
+      // 清空登录人信息
       commit('delUser')
+      // 清空本地存储的购物车信息
+      // 调的是cart模块中的mutations------遵循state中的数据只能mutations改，
+      // 跨模块开启上帝视角，或在页面中拿到顶层也行
+      // 不能用rootState去覆盖为[],因为state中的数据只能mutations改，
+      commit('cart/setList', [], { root: true })
     }
   }
 }

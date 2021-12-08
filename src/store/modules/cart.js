@@ -79,7 +79,7 @@ export default {
     changeNum (state, { good, num }) {
       state.list.find(item => item.skuId === good.skuId).count = num
     },
-    // 存储最新后台购物车数据
+    // 清除赋值为空，有新数据合并
     // 存储后台购物车数据
     setList (state, list) {
       state.list = list
