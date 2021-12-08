@@ -14,6 +14,8 @@ const Cart = () => import('@/views/Cart')
 const Order = () => import('@/views/Member/settlement')
 // 支付
 const Pay = () => import('@/views/Member/pay')
+// 结果
+const PayResult = () => import('@/views/Member/pay/result')
 // 路由规则
 const routes = [
   {
@@ -42,7 +44,9 @@ const routes = [
     {
       path: '/pay',
       component: Pay
-    }
+    },
+    // 支付结果
+    { path: '/pay/callback', component: PayResult }
     ]
   },
   // 登录路由
