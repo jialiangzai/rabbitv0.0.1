@@ -96,9 +96,7 @@
           <span class="red">¥{{ validSeledTotal.toFixed(2) }}</span>
         </div>
         <div class="total">
-          <XtxButton type="primary" @click="$router.push('/member/order')"
-            >下单结算</XtxButton
-          >
+          <XtxButton type="primary" @click="goOrder">下单结算</XtxButton>
         </div>
       </div>
     </div>
@@ -107,6 +105,7 @@
 <script>
 import { mapGetters, useStore } from 'vuex'
 import msg from '@/components/Message/index'
+import { useRouter } from 'vue-router'
 export default {
   name: 'XtxCartPage',
   computed: {
@@ -117,6 +116,7 @@ export default {
       'isAll'])
   },
   setup () {
+    const router = useRouter()
     const store = useStore()
     // 单选
     const singnChe = async (good, sel) => {
@@ -161,7 +161,23 @@ export default {
     const getListcart = async () => {
       await store.dispatch('cart/getCartList')
     }
-    return { singnChe, setIsAllFn, delCheck, changeNum, getListcart }
+    // 下单结算
+    const goOrder = () => {
+      /**
+       * 1.必须是登录状态 token
+       * 2.购物车必须是有效商品
+       */
+      // console.log('store数据', store)
+      if (!store.state.user.profile.token) {
+        msg({ type: 'error', text: '请您登录后下单' })
+      }
+      // 注意命名空间不能直接点用中括号
+      if (!store.getters['cart/validList'].length) {
+        msg({ type: 'error', text: '请至少选中一件下单商品！' })
+      }
+      router.push('/order')
+    }
+    return { goOrder, singnChe, setIsAllFn, delCheck, changeNum, getListcart }
   }
 }
 </script>
