@@ -43,23 +43,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="i in 4" :key="i">
+              <!-- 渲染的列表数据 -->
+              <tr v-for="i in checkoutInfo.goods" :key="i.id">
                 <td>
                   <a href="javascript:;" class="info">
-                    <img
-                      src="https://yanxuan-item.nosdn.127.net/cd9b2550cde8bdf98c9d083d807474ce.png"
-                      alt=""
-                    />
+                    <img :src="i.picture" alt="" />
                     <div class="right">
-                      <p>轻巧多用锅雪平锅 麦饭石不粘小奶锅煮锅</p>
-                      <p>颜色：白色 尺寸：10cm 产地：日本</p>
+                      <p>{{ i.name }}</p>
+                      <p>{{ i.attrsText }}</p>
                     </div>
                   </a>
                 </td>
-                <td>&yen;100.00</td>
-                <td>2</td>
-                <td>&yen;200.00</td>
-                <td>&yen;200.00</td>
+                <td>&yen;{{ i.payPrice }}</td>
+                <td>{{ i.count }}</td>
+                <td>&yen;{{ i.totalPrice }}</td>
+                <td>&yen;{{ i.totalPayPrice }}</td>
               </tr>
             </tbody>
           </table>
@@ -82,37 +80,54 @@
         </div>
         <!-- 金额明细 -->
         <h3 class="box-title">金额明细</h3>
-        <div class="box-body">
+        <!-- 多级渲染要判断 -->
+        <div class="box-body" v-if="checkoutInfo.summary">
           <div class="total">
             <dl>
               <dt>商品件数：</dt>
-              <dd>5件</dd>
+              <dd>{{ checkoutInfo.summary.goodsCount }}件</dd>
             </dl>
             <dl>
               <dt>商品总价：</dt>
-              <dd>¥5697.00</dd>
+              <dd>¥{{ checkoutInfo.summary.totalPrice }}</dd>
             </dl>
             <dl>
               <dt>运<i></i>费：</dt>
-              <dd>¥0.00</dd>
+              <dd>¥{{ checkoutInfo.summary.postFee }}</dd>
             </dl>
             <dl>
               <dt>应付总额：</dt>
-              <dd class="price">¥5697.00</dd>
+              <dd class="price">¥{{ checkoutInfo.summary.totalPayPrice }}</dd>
             </dl>
           </div>
-        </div>
-        <!-- 提交订单 -->
-        <div class="submit">
-          <XtxButton type="primary">提交订单</XtxButton>
+          <!-- 提交订单 -->
+          <div class="submit">
+            <XtxButton type="primary">提交订单</XtxButton>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { findCheckoutInfo } from '@/api/order'
+import { ref } from 'vue-demi'
 export default {
-  name: 'XtxPayCheckoutPage'
+  name: 'XtxPayCheckoutPage',
+  setup () {
+    const checkoutInfo = ref({})
+    const getOrder = async () => {
+      // { page = 1, pageSize = 10, orderState = 0 }
+      // 这里能拿到登录人的购物车选中数据是因为登录后在购物车里调用了接口直接操作了数据库
+      const { result } = await findCheckoutInfo()
+      console.log('订单数据', result)
+      checkoutInfo.value = result
+    }
+    getOrder()
+    return {
+      checkoutInfo
+    }
+  }
 }
 </script>
 <style scoped lang="less">
