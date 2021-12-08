@@ -1,5 +1,5 @@
 
-import { mergeLocalCart, findCartList, insertCart, deleteCart } from '@/api/cart'
+import { mergeLocalCart, findCartList, insertCart, deleteCart, updateCart, checkAllCart } from '@/api/cart'
 // 购物车状态
 export default {
   namespaced: true,
@@ -115,10 +115,18 @@ export default {
       }
     },
     // 单选
-    async signCheckActions ({ commit, rootState }, { good, sel }) {
+    async signCheckActions ({ commit, rootState, dispatch }, { good, sel }) {
       // console.log('上下文rootState数据', rootState)
       if (rootState.user.profile.token) {
         // 已经登录---调接口
+        // * @param {String} goods.skuId - 商品sku
+        // * @param {Boolean} goods.selected - 选中状态
+        // * @param {Integer} goods.count - 商品数量
+        // 注意这里使用解构是浅拷贝源对象不变;拿到的就是sel的最新值
+        await updateCart({ ...good, selected: sel })
+        // 拉新
+        dispatch('getCartList')
+        return '操作成功'
       } else {
         // 未登录
         commit('setSignCheck', { good, sel })
@@ -126,9 +134,16 @@ export default {
       }
     },
     // 全选
-    TotalActions ({ commit, rootState }, sel) {
+    async TotalActions ({ commit, rootState, dispatch, getters }, sel) {
       if (rootState.user.profile.token) {
         // 已经登录---调接口
+        // * @param { Boolean } selected - 选中状态
+        //   * @param { Array < string >} ids - 有效商品skuId集合
+        const ids = getters.validList.map(item => item.skuId)
+        console.log('我是全选状态', ids)
+        await checkAllCart({ selected: sel, ids })
+        dispatch('getCartList')
+        return '操作成功'
       } else {
         // 未登录
         commit('setTotal', sel)
@@ -150,9 +165,11 @@ export default {
       }
     },
     // 修改数量
-    changeNumActions ({ commit, rootState }, { good, num }) {
+    async changeNumActions ({ commit, rootState, dispatch }, { good, num }) {
       if (rootState.user.profile.token) {
         // 已经登录---调接口
+        await updateCart({ ...good, count: num })
+        dispatch('getCartList')
       } else {
         // 未登录
         commit('changeNum', { good, num })
@@ -161,7 +178,7 @@ export default {
     // 登录后台购物车信息有token----拿到最新的购物车
     async getCartList ({ commit }) {
       const { result } = await findCartList()
-      console.log('你猜', result)
+      console.log('最新购物车', result)
       commit('setList', result)
     },
     // 登录后合并购物车
