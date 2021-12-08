@@ -3,7 +3,7 @@
     <!-- 开启规则不用v-model数据但是要写错误信息 -->
     <Form class="form" :validation-schema="rules" v-slot="{ errors }" ref="fm">
       <!-- 错误信息如果有错误返回一个错误对象中有错误信息 通过返回null-->
-      <p>{{ errors }}</p>
+      <!-- <p>{{ errors }}</p> -->
       <!-- 表单元素 -->
       <div class="form-item">
         <div class="input">

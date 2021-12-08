@@ -12,6 +12,8 @@ const Login = () => import('@/views/Login')
 const Cart = () => import('@/views/Cart')
 // 下单
 const Order = () => import('@/views/Member/settlement')
+// 支付
+const Pay = () => import('@/views/Member/pay')
 // 路由规则
 const routes = [
   {
@@ -35,6 +37,11 @@ const routes = [
     {
       path: '/order',
       component: Order
+    },
+    // 支付
+    {
+      path: '/pay',
+      component: Pay
     }
     ]
   },

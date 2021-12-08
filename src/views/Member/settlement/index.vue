@@ -6,20 +6,24 @@
         <XtxBreadItem to="/cart">购物车</XtxBreadItem>
         <XtxBreadItem>填写订单</XtxBreadItem>
       </XtxBread>
-      <div class="wrapper">
+      <div class="wrapper" v-if="checkoutInfo">
         <!-- 收货地址 -->
         <h3 class="box-title">收货地址</h3>
         <div class="box-body">
           <div class="address">
             <div class="text">
-              <!-- <div class="none">您需要先添加收货地址才可提交订单。</div> -->
-              <ul>
+              <!-- 地址 有地址不显示提醒无地址显示 -->
+              <div class="none" v-if="!curAddress">
+                您需要先添加收货地址才可提交订单。
+              </div>
+              <ul v-if="curAddress">
                 <li>
-                  <span>收<i />货<i />人：</span>朱超
+                  <span>收<i />货<i />人：</span>{{ curAddress.receiver }}
                 </li>
-                <li><span>联系方式：</span>132****2222</li>
+                <li><span>联系方式：</span>{{ curAddress.contact }}</li>
                 <li>
-                  <span>收货地址：</span>海南省三亚市解放路108号物质大厦1003室
+                  <span>收货地址：</span
+                  >{{ curAddress.fullLocation + curAddress.address }}
                 </li>
               </ul>
             </div>
@@ -102,7 +106,7 @@
           </div>
           <!-- 提交订单 -->
           <div class="submit">
-            <XtxButton type="primary">提交订单</XtxButton>
+            <XtxButton type="primary" @click="createOrders">提交订单</XtxButton>
           </div>
         </div>
       </div>
@@ -110,22 +114,58 @@
   </div>
 </template>
 <script>
-import { findCheckoutInfo } from '@/api/order'
+import { createOrder as createOrderApi, findCheckoutInfo } from '@/api/order'
 import { ref } from 'vue-demi'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+// 提交订单api
 export default {
   name: 'XtxPayCheckoutPage',
   setup () {
+    // 订单结算信息----购物车数据
     const checkoutInfo = ref({})
+    // 地址
+    const curAddress = ref(null)
+    const store = useStore()
+    const router = useRouter()
+    // 获取
     const getOrder = async () => {
       // { page = 1, pageSize = 10, orderState = 0 }
       // 这里能拿到登录人的购物车选中数据是因为登录后在购物车里调用了接口直接操作了数据库
       const { result } = await findCheckoutInfo()
       console.log('订单数据', result)
       checkoutInfo.value = result
+      curAddress.value = checkoutInfo.value.userAddresses[0]
     }
     getOrder()
+    // 填写的订单数据-----创建订单确认提交
+    const createOrders = async () => {
+      // 准备提交的数据对象
+      //       deliveryTimeType: 1, 配送时间类型，1为不限，2为工作日，3为双休或假日
+      //  payType: 1, 支付方式，1为在线支付，2为货到付款
+      //  buyerMessage: '', 买家留言
+      //  addressId: null, // 地址id
+      //  goods: [] // { skuId, count } 由所有商品的skuId 和 count字段组成的数组必须传
+      const reqData =
+      {
+        deliveryTimeType: 1, // 配送时间类型，1为不限，2为工作日，3为双休或假日
+        payType: 1, // 支付方式，1为在线支付，2为货到付款
+        buyerMessage: '', // 买家留言
+        addressId: '1429265915203031042', // 地址id
+        goods: [] // { skuId, count } 由所有商品的skuId 和 count字段组成的数组
+      }
+      // 处理goods数据
+      reqData.goods = checkoutInfo.value.goods.map(({ skuId, count }) => ({ skuId, count }))
+      const { result } = await createOrderApi(reqData)
+      // console.log('我', res)// ['1535011', '1127094', '1148091']
+      // 调接口传递已经选中的商品及参数对象---后台会帮我们把购物车中下单了的商品删除所以要刷新购物车----跳转到支付页面
+      store.dispatch('cart/getCartList')
+      router.push(`/pay?id=${result.id}`)
+    }
     return {
-      checkoutInfo
+      checkoutInfo,
+      curAddress,
+      createOrders
     }
   }
 }
